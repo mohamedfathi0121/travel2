@@ -1,5 +1,6 @@
 import "./App.css";
 import { Toaster } from "react-hot-toast";
+
 import LandingPage from './pages/landing_page'; 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
