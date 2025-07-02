@@ -1,29 +1,22 @@
-import React, { useState } from "react";
-import { Helmet } from "react-helmet-async";
+import { useState } from "react";
 
-import Header from "../components/header";
-import Footer from "../components/footer";
 export default function PaymentPage() {
   const [method, setMethod] = useState("PayPal");
 
   return (
     <div className="min-h-screen bg-white">
- 
-      <Helmet>
+      {/* <Helmet>
         <title>Payment - AdventureCo</title>
         <meta name="description" content="Secure and fast payment process with AdventureCo. Choose PayPal or Credit Card to complete your booking." />
-      </Helmet>
-
-
-      <Header />
-
-     
+      </Helmet> */}
       <div className="flex justify-center px-4 pt-12 pb-16">
         <div className="w-full max-w-2xl space-y-8">
           <h1 className="text-3xl font-bold text-gray-900">Payment</h1>
 
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Payment Method</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Payment Method
+            </h2>
             <div className="space-y-3">
               <label className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors duration-200">
                 <input
@@ -31,9 +24,11 @@ export default function PaymentPage() {
                   name="paymentMethod"
                   value="PayPal"
                   checked={method === "PayPal"}
-                  onChange={(e) => setMethod(e.target.value)}
+                  onChange={e => setMethod(e.target.value)}
                 />
-                <span className="text-base font-medium text-gray-800">PayPal</span>
+                <span className="text-base font-medium text-gray-800">
+                  PayPal
+                </span>
               </label>
               <label className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors duration-200">
                 <input
@@ -41,17 +36,20 @@ export default function PaymentPage() {
                   name="paymentMethod"
                   value="CreditCard"
                   checked={method === "CreditCard"}
-                  onChange={(e) => setMethod(e.target.value)}
+                  onChange={e => setMethod(e.target.value)}
                 />
-                <span className="text-base font-medium text-gray-800">Credit Card</span>
+                <span className="text-base font-medium text-gray-800">
+                  Credit Card
+                </span>
               </label>
             </div>
           </div>
 
-
           <form className="space-y-6 flex flex-col items-center">
             <div className="w-full max-w-md">
-              <label className="text-sm font-medium text-gray-700 block mb-2">Card Number</label>
+              <label className="text-sm font-medium text-gray-700 block mb-2">
+                Card Number
+              </label>
               <input
                 type="text"
                 placeholder="Enter card number"
@@ -61,7 +59,9 @@ export default function PaymentPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-md">
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">Expiry Date</label>
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  Expiry Date
+                </label>
                 <input
                   type="text"
                   placeholder="MM/YY"
@@ -69,7 +69,9 @@ export default function PaymentPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">CVV</label>
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  CVV
+                </label>
                 <input
                   type="text"
                   placeholder="123"
@@ -79,7 +81,9 @@ export default function PaymentPage() {
             </div>
 
             <div className="w-full max-w-md">
-              <label className="text-sm font-medium text-gray-700 block mb-2">Name on Card</label>
+              <label className="text-sm font-medium text-gray-700 block mb-2">
+                Name on Card
+              </label>
               <input
                 type="text"
                 placeholder="Enter name"
@@ -98,7 +102,6 @@ export default function PaymentPage() {
           </form>
         </div>
       </div>
-         <Footer/>
     </div>
   );
 }

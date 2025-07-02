@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 import paris from "../assets/popular-section-images/paris.png";
 import tokyo from "../assets/popular-section-images/tokyo.png";
@@ -20,15 +20,14 @@ export default function LandingPage() {
 
   return (
     <div className="bg-white text-gray-800 font-sans">
-      <Helmet>
+      {/* <Helmet>
         <title>AdventureCo - Find Your Next Adventure</title>
         <meta
           name="description"
           content="Discover unique trips, explore cities, and book your perfect getaway with AdventureCo."
         />
-      </Helmet>
+      </Helmet> */}
 
-      <Header />
 
 
       <section className="relative flex justify-center items-center py-12 px-4 md:px-20">
@@ -103,7 +102,7 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
-         <Footer/>
+
     </div>
   );
 }
