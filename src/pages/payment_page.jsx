@@ -4,17 +4,17 @@ export default function PaymentPage() {
   const [method, setMethod] = useState("PayPal");
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* <Helmet>
         <title>Payment - AdventureCo</title>
         <meta name="description" content="Secure and fast payment process with AdventureCo. Choose PayPal or Credit Card to complete your booking." />
       </Helmet> */}
       <div className="flex justify-center px-4 pt-12 pb-16">
         <div className="w-full max-w-2xl space-y-8">
-          <h1 className="text-3xl font-bold text-gray-900">Payment</h1>
+          <h1 className="text-3xl font-bold text-text-primary">Payment</h1>
 
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">
               Payment Method
             </h2>
             <div className="space-y-3">
