@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FiSearch, FiMenu, FiX, FiUser } from "react-icons/fi";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function Header() {
             >
               <FiUser />
             </button>
+            <ThemeSwitcher />
 
             {/* DROPDOWN MENU */}
             {userMenuOpen && (

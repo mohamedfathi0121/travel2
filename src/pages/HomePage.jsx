@@ -19,10 +19,23 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-gray-50">
-      <div className="bg-white rounded shadow md:col-span-1">
+    <div
+      className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6"
+      style={{
+        backgroundColor: "var(--color-background)",
+        color: "var(--color-text-primary)",
+      }}
+    >
+      <div
+        className="rounded shadow md:col-span-1"
+        style={{
+          backgroundColor: "var(--color-background)",
+          color: "var(--color-text-primary)",
+        }}
+      >
         <SidebarFilters onFilter={handleFilter} />
       </div>
+
       <div className="md:col-span-3">
         <h1 className="text-2xl font-bold mb-4">Trips</h1>
         {filteredTrips.map((trip) => (
