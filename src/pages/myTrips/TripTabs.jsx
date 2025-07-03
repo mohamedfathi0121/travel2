@@ -10,8 +10,8 @@ export default function TripTabs({ currentTab, setCurrentTab }) {
             key={tab}
             className={`py-2 px-2 sm:px-4 text-sm sm:text-base font-medium border-b-2 transition-colors duration-200 ${
               isActive
-                ? "border-black text-black"
-                : "border-transparent text-gray-500 hover:text-black"
+                ? "border-text-primary text-text-primary"
+                : "border-transparent text-text-secondary hover:text-text-primary"
             }`}
             onClick={() => setCurrentTab(tab)}
           >
