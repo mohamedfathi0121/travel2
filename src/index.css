@@ -10,10 +10,17 @@
   --color-background: #ffffff;
   --color-text-primary: #000000;
   --color-text-secondary: #59738c;
+  --color-text-hard-secondary: #808080;
   --color-input:#E8EDF2
+
+  --color-button-primary: #367dc9
+  --color-button-primary-hover: #135296
+
+
   --color-btn-primary: #367dc9
   --color-btn-primary-hover: #135296
   --color-header-background:#E5E8EB
+
 }
 
 /* Define overrides for the dark variant */
@@ -22,9 +29,15 @@
   --color-background: #0F172A;
   --color-text-primary: #E2E8F0;
   --color-text-secondary: #94A3B8;
+  --color-text-hard-secondary: #ffffff;
   --color-input: #1E293B;
+
+  --color-button-primary: #3B82F6;
+  --color-button-primary-hover: #2563EB;
+
   --color-btn-primary: #3B82F6;
   --color-btn-primary-hover: #2563EB;
   
+
   }
 }
