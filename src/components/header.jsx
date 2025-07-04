@@ -7,12 +7,12 @@ export default function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white shadow-md z-50 relative">
+    <header className="w-full bg-background shadow-md z-50 relative border-b border-gray-300">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4 md:px-8 py-4">
    
-        <div className="text-xl md:text-2xl font-bold text-gray-900 whitespace-nowrap">AdventureCo</div>
+        <div className="text-xl md:text-2xl font-bold text-text-primary whitespace-nowrap">AdventureCo</div>
    
-        <ul className="hidden md:flex space-x-6 ml-6 text-sm font-medium text-gray-700">
+        <ul className="hidden md:flex space-x-6 ml-6 text-sm font-medium text-text-primary">
           <li><a href="#" className="hover:text-blue-600">Explore</a></li>
           <li><a href="#" className="hover:text-blue-600">Create</a></li>
           <li><a href="#" className="hover:text-blue-600">About</a></li>
@@ -24,9 +24,9 @@ export default function Header() {
             <input
               type="text"
               placeholder="Search"
-              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="bg-input placeholder-text-secondary  w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
-            <FiSearch className="absolute left-3 top-2.5 text-gray-500 text-lg" />
+            <FiSearch className="absolute left-3 top-2.5 text-text-primary text-lg" />
           </div>
 
           
@@ -64,10 +64,10 @@ export default function Header() {
 
       {/* Mobile Dropdown */}
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 flex flex-col space-y-3 text-sm font-medium text-gray-700">
-          <a href="#" className="hover:text-blue-600">Explore</a>
-          <a href="#" className="hover:text-blue-600">Create</a>
-          <a href="#" className="hover:text-blue-600">About</a>
+        <div className="md:hidden px-4 pb-4 flex flex-col space-y-3 text-sm font-medium text-text-primary">
+          <a href="#" className="hover:text-text-primary">Explore</a>
+          <a href="#" className="hover:text-text-primary">Create</a>
+          <a href="#" className="hover:text-text-primary">About</a>
         </div>
       )}
     </header>
