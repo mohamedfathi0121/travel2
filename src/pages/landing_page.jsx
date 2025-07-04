@@ -4,8 +4,8 @@ import tokyo from "../assets/popular-section-images/tokyo.png";
 import london from "../assets/popular-section-images/London.png";
 import sydney from "../assets/popular-section-images/sydney.png";
 import rome from "../assets/popular-section-images/rome.png";
-import Header from "../components/header";
-import Footer from "../components/footer";
+
+import TripCard from "../components/trip-card";
 
 export default function LandingPage() {
   const popularDestinations = [
@@ -17,16 +17,8 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="bg-white text-gray-800 font-sans">
-      {/* <Helmet>
-        <title>AdventureCo - Find Your Next Adventure</title>
-        <meta
-          name="description"
-          content="Discover unique trips, explore cities, and book your perfect getaway with AdventureCo."
-        />
-      </Helmet> */}
-
-
+    <div className="bg-background text-gray-800 font-sans">
+    
 
       <section className="relative flex justify-center items-center py-12 px-4 md:px-20">
         <div
@@ -56,7 +48,7 @@ export default function LandingPage() {
       </section>
 
       <section className="px-6 md:px-16 py-10 md:py-12">
-        <h2 className="text-2xl font-semibold mb-6">Featured Trips</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-text-primary">Featured Trips</h2>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6">
           <TripCard
             img="/src/assets/1.png"
@@ -76,8 +68,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="w-full px-6 md:px-16 py-20 bg-gray-50">
-        <h2 className="text-3xl font-semibold mb-10 text-center text-gray-800">
+      <section className="w-full px-6 md:px-16 py-20 bg-background">
+        <h2 className="text-3xl font-semibold mb-10 text-center text-text-primary">
           Popular Destinations
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
@@ -93,27 +85,15 @@ export default function LandingPage() {
                 loading="lazy"
                 className="w-full h-40 object-cover transform hover:scale-105 transition duration-300"
               />
-              <p className="text-center text-base mt-2 font-medium text-gray-700 hover:text-blue-600">
+              <p className="text-center text-base mt-2 font-medium text-text-primary hover:text-blue-600">
                 {city}
               </p>
             </Link>
           ))}
         </div>
       </section>
-
+        
     </div>
   );
 }
 
-function TripCard({ img, title, desc }) {
-  return (
-    <div className="bg-gray-100 rounded-lg overflow-hidden shadow-md">
-      <img src={img} alt={title} loading="lazy" className="w-full h-40 object-cover" />
-      <div className="p-4">
-        <h3 className="font-bold text-lg mb-1">{title}</h3>
-        <p className="text-sm text-gray-600">{desc}</p>
-      </div>
-   
-    </div>
-  );
-}
