@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet";
 import TripTabs from "./TripTabs";
 import TripCard from "./TripCard";
 import aImage from "../../assets/a.jpg";
@@ -28,13 +27,13 @@ function TripPage() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>My Trips</title>
         <meta
           name="description"
           content="View and manage your upcoming trips"
         />
-      </Helmet>
+      </Helmet> */}
 
       <div className="w-full max-w-[90%] mx-auto p-6 font-sans bg-white min-h-screen">
         <h1 className="text-2xl font-bold mb-4">My Trips</h1>

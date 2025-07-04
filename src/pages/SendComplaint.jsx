@@ -1,12 +1,11 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 
 const SendComplaint = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Helmet>
+      {/* <Helmet>
         <title>Send Complaint</title>
-      </Helmet>
+      </Helmet> */}
 
       <div className="w-full h-full bg-white p-8 rounded-md shadow-md flex flex-col justify-center">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
