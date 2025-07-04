@@ -19,20 +19,8 @@ const HomePage = () => {
   };
 
   return (
-    <div
-      className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6"
-      style={{
-        backgroundColor: "var(--color-background)",
-        color: "var(--color-text-primary)",
-      }}
-    >
-      <div
-        className="rounded shadow md:col-span-1"
-        style={{
-          backgroundColor: "var(--color-background)",
-          color: "var(--color-text-primary)",
-        }}
-      >
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-theme text-theme">
+      <div className="rounded shadow md:col-span-1 bg-theme text-theme">
         <SidebarFilters onFilter={handleFilter} />
       </div>
 

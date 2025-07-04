@@ -12,25 +12,14 @@ const SidebarFilters = ({ onFilter }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-4 space-y-4"
-      style={{
-        backgroundColor: "var(--color-background)",
-        color: "var(--color-text-primary)",
-      }}
-    >
+    <form onSubmit={handleSubmit} className="p-4 space-y-4 bg-theme text-theme">
       <div>
         <label className="block text-sm font-medium">Destination</label>
         <input
           type="text"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
-          className="w-full border rounded p-2"
-          style={{
-            backgroundColor: "var(--color-input)",
-            color: "var(--color-text-primary)",
-          }}
+          className="w-full border rounded p-2 bg-input text-theme"
         />
       </div>
 
@@ -40,11 +29,7 @@ const SidebarFilters = ({ onFilter }) => {
           type="number"
           value={cost}
           onChange={(e) => setCost(e.target.value)}
-          className="w-full border rounded p-2"
-          style={{
-            backgroundColor: "var(--color-input)",
-            color: "var(--color-text-primary)",
-          }}
+          className="w-full border rounded p-2 bg-input text-theme"
         />
       </div>
 
@@ -54,27 +39,11 @@ const SidebarFilters = ({ onFilter }) => {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full border rounded p-2"
-          style={{
-            backgroundColor: "var(--color-input)",
-            color: "var(--color-text-primary)",
-          }}
+          className="w-full border rounded p-2 bg-input text-theme"
         />
       </div>
 
-      <button
-        type="submit"
-        className="px-4 py-2 rounded text-white"
-        style={{
-          backgroundColor: "var(--color-btn-primary)",
-        }}
-        onMouseOver={(e) => {
-          e.target.style.backgroundColor = "var(--color-btn-primary-hover)";
-        }}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = "var(--color-btn-primary)";
-        }}
-      >
+      <button type="submit" className="px-4 py-2 rounded btn-theme">
         Filter
       </button>
     </form>
