@@ -41,10 +41,10 @@ const TripInfo = () => {
   });
 
   return (
-    <div className="max-w-3xl mx-auto p-6 text-theme">
+    <div className="max-w-3xl mx-auto p-6 text-[var(--color-text-primary)]">
       <button
         onClick={() => navigate(-1)}
-        className="underline mb-4 text-sm text-[color:var(--color-btn-primary)]"
+        className="underline mb-4 text-sm text-[var(--color-btn-primary)]"
       >
         ← Back
       </button>
@@ -57,51 +57,41 @@ const TripInfo = () => {
       />
 
       <p>{trip.description}</p>
-      <p className="mt-4">
-        <strong>Destination:</strong> {trip.destination}
-      </p>
-      <p>
-        <strong>Date:</strong> {trip.date}
-      </p>
-      <p>
-        <strong>Price:</strong> ${trip.price}
-      </p>
+      <p className="mt-4"><strong>Destination:</strong> {trip.destination}</p>
+      <p><strong>Date:</strong> {trip.date}</p>
+      <p><strong>Price:</strong> ${trip.price}</p>
 
       <hr className="my-6" />
 
       {/* Rating Summary */}
-      <div className="p-6 rounded shadow mb-10 bg-theme">
+      <div className="p-6 rounded shadow mb-10 bg-[var(--color-background)]">
         <h2 className="text-xl font-semibold mb-4">How was your trip?</h2>
         <div className="flex items-start gap-6">
+          {/* Average Rating */}
           <div className="text-center w-32">
             <p className="text-4xl font-bold">{averageRating}</p>
             <div className="flex justify-center text-yellow-500 mt-1">
               {Array.from({ length: 5 }, (_, i) => (
-                <FaStar
-                  key={i}
-                  className={i < Math.round(averageRating) ? "" : "text-gray-300"}
-                />
+                <FaStar key={i} className={i < Math.round(averageRating) ? "" : "text-gray-300"} />
               ))}
             </div>
-            <p className="text-sm mt-1 text-secondary">
+            <p className="text-sm mt-1 text-[var(--color-text-secondary)]">
               {totalReviews} reviews
             </p>
           </div>
 
+          {/* Rating Breakdown */}
           <div className="flex-1 space-y-2">
             {ratingsData.map((r) => (
               <div key={r.stars} className="flex items-center gap-2">
                 <span className="w-6">{r.stars}</span>
                 <div className="flex-1 h-3 rounded bg-gray-300">
                   <div
-                    className="h-3 rounded"
-                    style={{
-                      backgroundColor: "var(--color-btn-primary)",
-                      width: `${r.percent}%`,
-                    }}
+                    className="h-3 rounded bg-[var(--color-btn-primary)]"
+                    style={{ width: `${r.percent}%` }}
                   />
                 </div>
-                <span className="w-10 text-right text-sm text-secondary">
+                <span className="w-10 text-right text-sm text-[var(--color-text-secondary)]">
                   {r.percent}%
                 </span>
               </div>
@@ -110,21 +100,24 @@ const TripInfo = () => {
         </div>
       </div>
 
-      {/* Reviews */}
+      {/* All Reviews */}
       <div className="mb-10">
         <h2 className="text-xl font-semibold mb-4">All Reviews</h2>
         <div className="space-y-4">
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
-              <div key={index} className="border p-4 rounded shadow-sm bg-theme">
+              <div
+                key={index}
+                className="border p-4 rounded shadow-sm bg-[var(--color-background)]"
+              >
                 <p className="font-bold">
                   {review.name} ⭐ {review.rating}/5
                 </p>
-                <p className="text-secondary">{review.comment}</p>
+                <p className="text-[var(--color-text-secondary)]">{review.comment}</p>
               </div>
             ))
           ) : (
-            <p className="text-secondary">No reviews yet.</p>
+            <p className="text-[var(--color-text-secondary)]">No reviews yet.</p>
           )}
         </div>
       </div>
@@ -132,35 +125,36 @@ const TripInfo = () => {
       {/* Add Review */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 rounded shadow p-6 bg-theme"
+        className="space-y-4 rounded shadow p-6 bg-[var(--color-background)]"
       >
         <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
 
         <input
           {...register("name", { required: true })}
           placeholder="Your Name"
-          className="w-full border p-2 rounded bg-input"
+          className="w-full border p-2 rounded bg-[var(--color-input)] text-[var(--color-text-primary)]"
         />
 
         <select
           {...register("rating", { required: true })}
-          className="w-full border p-2 rounded bg-input"
+          className="w-full border p-2 rounded bg-[var(--color-input)] text-[var(--color-text-primary)]"
         >
           <option value="">Select Rating</option>
           {[5, 4, 3, 2, 1].map((star) => (
-            <option key={star} value={star}>
-              {star} Star
-            </option>
+            <option key={star} value={star}>{star} Star</option>
           ))}
         </select>
 
         <textarea
           {...register("comment", { required: true })}
           placeholder="Your Comment"
-          className="w-full border p-2 rounded bg-input"
+          className="w-full border p-2 rounded bg-[var(--color-input)] text-[var(--color-text-primary)]"
         />
 
-        <button type="submit" className="px-4 py-2 rounded btn-theme">
+        <button
+          type="submit"
+          className="text-white px-4 py-2 rounded bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+        >
           Submit Review
         </button>
       </form>
