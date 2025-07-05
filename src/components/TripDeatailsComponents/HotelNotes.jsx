@@ -1,17 +1,17 @@
 export default function HotelNotes() {
   return (
-    <section className="bg-gray-50 p-4 rounded-lg shadow-md mb-4 text-right">
-      <h2 className="text-xl font-semibold text-blue-800 mb-3">ملاحظات:</h2>
-      <h3 className="text-lg font-bold mb-2">سياسة الأطفال:</h3>
-      <ul className="list-disc pr-6 space-y-1 text-gray-800 ">
-        <li>حد أقصى طفلين فقط في نفس غرفة الوالدين.</li>
-        <li>الأطفال من 0 إلى 05.99 سنة مجانًا (بدون سرير إضافي).</li>
-        <li>الطفل الأول من 06.00 إلى 11.99 سنة مجانًا (بدون سرير إضافي).</li>
-        <li>الطفل الثاني من 06.00 إلى 11.99 سنة 50% من سعر الفرد البالغ (مع سرير إضافي).</li>
-        <li>12 سنة يعتبر فرد بالغ.</li>
-        <li>الطاقة الاستيعابية للغرفة الثلاثية: 03 أفراد بالغين + 01 طفل.</li>
-        <li>1 فرد بالغ + 1 طفل = غرفة مفردة.</li>
-        <li>طفلين (في غرفة منفصلة) = غرفة مفردة.</li>
+    <section className="bg-background p-4 rounded-lg shadow-md mb-4 text-left">
+      <h2 className="text-xl font-semibold  mb-3  text-text-primary">Notes:</h2>
+      <h3 className="text-text-primary font-bold mb-2">Children Policy:</h3>
+      <ul className="list-disc pl-6 space-y-1 text-text-hard-secondary">
+        <li>Maximum of 2 children allowed in the same room with parents.</li>
+        <li>Children from 0 to 5.99 years old stay free of charge (no extra bed).</li>
+        <li>First child from 6.00 to 11.99 years old stays free of charge (no extra bed).</li>
+        <li>Second child from 6.00 to 11.99 years old gets 50% off adult rate (with extra bed).</li>
+        <li>Children aged 12 years and above are considered adults.</li>
+        <li>Triple room capacity: 3 adults + 1 child.</li>
+        <li>1 adult + 1 child = single room.</li>
+        <li>2 children (in a separate room) = single room.</li>
       </ul>
     </section>
   );
