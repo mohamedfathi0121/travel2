@@ -1,20 +1,20 @@
 export default function HotelLocation() {
   return (
-    <section className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4 text-right">
-      <h2 className="text-xl font-semibold mb-2 text-blue-800">موقع الفندق:</h2>
-      <p className="text-gray-700 leading-loose">
-        📍 يقع فندق فالكون هيلز في منطقة رأس أم سيد بشرم الشيخ، على بعد دقائق من خليج نعمة الشهير.
+    <section className="bg-background p-4 rounded-lg shadow-sm mb-4 text-left">
+      <h2 className="text-xl font-semibold mb-2 text-text-primary">Hotel Location:</h2>
+      <p className=" text-text-hard-secondary leading-loose">
+        📍 Falcon Hills Hotel is located in the Ras Umm El Sid area of Sharm El Sheikh, just minutes from the famous Naama Bay.
         <br />
-        🏖️ يبعد الفندق حوالي 750 مترًا عن شاطئ أمفورا.
+        🏖️ The hotel is approximately 750 meters from Amphoras Beach.
         <br />
-        ✈️ المسافة من مطار شرم الشيخ الدولي حوالي 17 كم.
+        ✈️ Sharm El Sheikh International Airport is about 17 km away.
         <br />
-        🚌 تتوفر خدمة نقل مجانية من وإلى خليج نعمة وشاطئ الفندق الخاص.
+        🚌 Free shuttle service is available to and from Naama Bay and the hotel's private beach.
         <br />
-        🚗 مواقف سيارات مجانية متاحة داخل الفندق.
+        🚗 Free parking is available at the hotel.
       </p>
 
-      {/* خريطة جوجل (اختياري) */}
+      {/* Google Map (optional) */}
       <div className="mt-4">
         <iframe
           title="Hotel Location"

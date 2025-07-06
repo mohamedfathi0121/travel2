@@ -46,7 +46,7 @@ export default function HotelGallery() {
 
   return (
     <div className="my-6 relative">
-      <h3 className="text-2xl font-semibold mb-4 text-right">معرض صور الفندق</h3>
+      <h3 className="text-2xl font-semibold mb-4 text-center">Hotel Photo Gallery</h3>
 
       {/* سهم اليسار */}
       <button
