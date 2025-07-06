@@ -9,17 +9,30 @@ export default function Header() {
   return (
     <header className="w-full bg-background shadow-md z-50 relative border-b border-gray-300">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4 md:px-8 py-4">
-   
-        <div className="text-xl md:text-2xl font-bold text-text-primary whitespace-nowrap">AdventureCo</div>
-   
+        <div className="text-xl md:text-2xl font-bold text-text-primary whitespace-nowrap">
+          AdventureCo
+        </div>
+
         <ul className="hidden md:flex space-x-6 ml-6 text-sm font-medium text-text-primary">
-          <li><a href="#" className="hover:text-blue-600">Explore</a></li>
-          <li><a href="#" className="hover:text-blue-600">Create</a></li>
-          <li><a href="#" className="hover:text-blue-600">About</a></li>
+          <li>
+            <a href="#" className="hover:text-blue-600">
+              Explore
+            </a>
+          </li>
+          <li>
+            <a href="#" className="hover:text-blue-600">
+              Create
+            </a>
+          </li>
+          <li>
+            <a href="#" className="hover:text-blue-600">
+              About
+            </a>
+          </li>
+
         </ul>
 
         <div className="flex items-center space-x-3 relative">
-     
           <div className="relative w-24 sm:w-32 md:w-48">
             <input
               type="text"
@@ -29,7 +42,6 @@ export default function Header() {
             <FiSearch className="absolute left-3 top-2.5 text-text-primary text-lg" />
           </div>
 
-          
           <div className="relative">
             <button
               onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -37,16 +49,27 @@ export default function Header() {
             >
               <FiUser />
             </button>
-            <ThemeSwitcher />
+
 
             {/* DROPDOWN MENU */}
             {userMenuOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-200 shadow-lg rounded-md z-50">
-                <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Login</a>
-                <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Sign Up</a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Login
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Sign Up
+                </a>
               </div>
             )}
           </div>
+                <div className="hidden md:flex"> <ThemeSwitcher /></div>     
 
           {/* Mobile Menu Button */}
           <button
@@ -65,9 +88,16 @@ export default function Header() {
       {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden px-4 pb-4 flex flex-col space-y-3 text-sm font-medium text-text-primary">
-          <a href="#" className="hover:text-text-primary">Explore</a>
-          <a href="#" className="hover:text-text-primary">Create</a>
-          <a href="#" className="hover:text-text-primary">About</a>
+          <a href="#" className="hover:text-text-primary">
+            Explore
+          </a>
+          <a href="#" className="hover:text-text-primary">
+            Create
+          </a>
+          <a href="#" className="hover:text-text-primary">
+            About
+          </a>
+          <ThemeSwitcher />
         </div>
       )}
     </header>

@@ -1,10 +1,9 @@
 import { Outlet } from "react-router-dom";
-import Header from "./header";
 
-export default function Layout () {
+
+export default function AuthLayout () {
     return (
         <div>
-        <Header></Header>
        <Outlet />
         </div>
 

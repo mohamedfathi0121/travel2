@@ -1,4 +1,5 @@
 import { useState } from "react";
+// import { Helmet } from "react-helmet";
 import TripTabs from "./TripTabs";
 import TripCard from "./TripCard";
 import aImage from "../../assets/a.jpg";
@@ -35,17 +36,19 @@ function TripPage() {
         />
       </Helmet> */}
 
-      <div className="w-full max-w-[90%] mx-auto p-6 font-sans bg-white min-h-screen">
-        <h1 className="text-2xl font-bold mb-4">My Trips</h1>
+      <div className="w-full max-w-[90%] mx-auto p-6 font-sans bg-background min-h-screen">
+        <h1 className="text-2xl font-bold mb-4 text-text-primary">My Trips</h1>
         <TripTabs currentTab={currentTab} setCurrentTab={setCurrentTab} />
         <div>
-          <h2 className="text-lg font-medium mb-4">{currentTab} Trips</h2>
+          <h2 className="text-lg font-medium mb-4 text-text-primary">
+            {currentTab} Trips
+          </h2>
           {tripData[currentTab].length > 0 ? (
             tripData[currentTab].map((trip, idx) => (
               <TripCard key={idx} {...trip} />
             ))
           ) : (
-            <p className="text-gray-400">
+            <p className="text-text-secondary">
               No {currentTab.toLowerCase()} trips.
             </p>
           )}

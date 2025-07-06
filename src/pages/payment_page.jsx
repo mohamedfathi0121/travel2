@@ -73,7 +73,7 @@ export default function PaymentPage() {
                 <input
                   type="text"
                   placeholder="123"
-                  className="bg-input w-full px-4 placeholder-text-secondary py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                  className="bg-input w-full px-4 placeholder-text-secondary py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-button-primary transition-colors duration-200"
                 />
               </div>
             </div>
@@ -85,14 +85,14 @@ export default function PaymentPage() {
               <input
                 type="text"
                 placeholder="Enter name"
-                className=" bg-input w-full px-4 py-3 border  placeholder-text-secondary border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                className=" bg-input w-full px-4 py-3 border  placeholder-text-secondary border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-button-primary transition-colors duration-200"
               />
             </div>
 
             <div className="w-full max-w-md">
               <button
                 type="submit"
-      className="w-full py-3 rounded-2xl bg-btn-primary text-text-primary font-semibold text-sm hover:bg-btn-primary-hover transition"
+      className="w-full py-3 rounded-2xl bg-button-primary text-text-primary font-semibold text-sm hover:bg-btn-primary-hover transition"
 
               >
                 Pay Now
