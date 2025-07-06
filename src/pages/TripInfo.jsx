@@ -41,10 +41,10 @@ const TripInfo = () => {
   });
 
   return (
-    <div className="max-w-3xl mx-auto p-6 text-[var(--color-text-primary)]">
+    <div className="max-w-3xl mx-auto p-6 text-text-primary">
       <button
         onClick={() => navigate(-1)}
-        className="underline mb-4 text-sm text-[var(--color-btn-primary)]"
+        className="underline mb-4 text-sm text-btn-primary"
       >
         ← Back
       </button>
@@ -64,7 +64,7 @@ const TripInfo = () => {
       <hr className="my-6" />
 
       {/* Rating Summary */}
-      <div className="p-6 rounded shadow mb-10 bg-[var(--color-background)]">
+      <div className="p-6 rounded shadow mb-10 bg-background">
         <h2 className="text-xl font-semibold mb-4">How was your trip?</h2>
         <div className="flex items-start gap-6">
           {/* Average Rating */}
@@ -75,7 +75,7 @@ const TripInfo = () => {
                 <FaStar key={i} className={i < Math.round(averageRating) ? "" : "text-gray-300"} />
               ))}
             </div>
-            <p className="text-sm mt-1 text-[var(--color-text-secondary)]">
+            <p className="text-sm mt-1 text-text-secondary">
               {totalReviews} reviews
             </p>
           </div>
@@ -87,11 +87,11 @@ const TripInfo = () => {
                 <span className="w-6">{r.stars}</span>
                 <div className="flex-1 h-3 rounded bg-gray-300">
                   <div
-                    className="h-3 rounded bg-[var(--color-btn-primary)]"
+                    className="h-3 rounded bg-btn-primary"
                     style={{ width: `${r.percent}%` }}
                   />
                 </div>
-                <span className="w-10 text-right text-sm text-[var(--color-text-secondary)]">
+                <span className="w-10 text-right text-sm text-text-secondary">
                   {r.percent}%
                 </span>
               </div>
@@ -108,16 +108,16 @@ const TripInfo = () => {
             reviews.map((review, index) => (
               <div
                 key={index}
-                className="border p-4 rounded shadow-sm bg-[var(--color-background)]"
+                className="border p-4 rounded shadow-sm bg-background"
               >
                 <p className="font-bold">
                   {review.name} ⭐ {review.rating}/5
                 </p>
-                <p className="text-[var(--color-text-secondary)]">{review.comment}</p>
+                <p className="text-text-secondary">{review.comment}</p>
               </div>
             ))
           ) : (
-            <p className="text-[var(--color-text-secondary)]">No reviews yet.</p>
+            <p className="text-text-secondary">No reviews yet.</p>
           )}
         </div>
       </div>
@@ -125,19 +125,19 @@ const TripInfo = () => {
       {/* Add Review */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 rounded shadow p-6 bg-[var(--color-background)]"
+        className="space-y-4 rounded shadow p-6 bg-background"
       >
         <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
 
         <input
           {...register("name", { required: true })}
           placeholder="Your Name"
-          className="w-full border p-2 rounded bg-[var(--color-input)] text-[var(--color-text-primary)]"
+          className="w-full border p-2 rounded bg-input text-text-primary"
         />
 
         <select
           {...register("rating", { required: true })}
-          className="w-full border p-2 rounded bg-[var(--color-input)] text-[var(--color-text-primary)]"
+          className="w-full border p-2 rounded bg-input text-text-primary"
         >
           <option value="">Select Rating</option>
           {[5, 4, 3, 2, 1].map((star) => (
@@ -148,12 +148,12 @@ const TripInfo = () => {
         <textarea
           {...register("comment", { required: true })}
           placeholder="Your Comment"
-          className="w-full border p-2 rounded bg-[var(--color-input)] text-[var(--color-text-primary)]"
+          className="w-full border p-2 rounded bg-input text-text-primary"
         />
 
         <button
           type="submit"
-          className="text-white px-4 py-2 rounded bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+          className="text-white px-4 py-2 rounded bg-btn-primary hover:bg-btn-primary-hover transition"
         >
           Submit Review
         </button>
