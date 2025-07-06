@@ -30,14 +30,19 @@ export default function TripDetails() {
         <HotelNotes />
         <HotelLocation />
 
-        <button
-          className="fixed bottom-4 right-4 bg-header-background text-text-primary px-6 py-3 rounded-full shadow-lg hover:bg-btn-primary-hover transition-all text-lg z-50"
-          onClick={() => {
-            window.location.href = "/booking"; // مثال
-          }}
-        >
-          احجز الآن
-        </button>
+      <button
+             className="fixed bottom-4 left-1/2 transform -translate-x-1/2 
+             px-5 py-2 rounded-full shadow-lg text-base z-50
+             bg-blue-500 text-white hover:bg-blue-600 
+             transition-all"
+            onClick={() => {
+             window.location.href = "/booking";
+            }}>
+           Book Now
+       </button>
+
+
+
       </div>
     </>
   );

@@ -8,6 +8,7 @@ import TripDetails from "./pages/TripDetails";
 import MyTrips from "./pages/myTrips/TripPage";
 import Complaint from "./pages/SendComplaint";
 import { ThemeProvider } from "./context/ThemeProvider";
+import ChatWidget from "./components/Chatcomponent/ChatWidget";
 function App() {
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
         </BrowserRouter>
       </ThemeProvider>
       <Toaster />
+      <ChatWidget />
     </>
   );
 }
