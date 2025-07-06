@@ -19,8 +19,8 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-[var(--color-background)] text-[var(--color-text-primary)]">
-      <div className="rounded shadow md:col-span-1 bg-[var(--color-background)]">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-background text-text-primary">
+      <div className="rounded shadow md:col-span-1 bg-background">
         <SidebarFilters onFilter={handleFilter} />
       </div>
 
