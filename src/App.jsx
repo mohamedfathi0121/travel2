@@ -8,6 +8,7 @@ import TripDetails from "./pages/TripDetails";
 import MyTrips from "./pages/myTrips/TripPage";
 import Complaint from "./pages/SendComplaint";
 import { ThemeProvider } from "./context/ThemeProvider";
+
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/mytrips" element={<MyTrips />} />
               <Route path="/complaint" element={<Complaint />} />
+             
             </Route>
           </Routes>
         </BrowserRouter>

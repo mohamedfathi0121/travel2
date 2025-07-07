@@ -14,7 +14,9 @@ const SidebarFilters = ({ onFilter }) => {
     <form
       onSubmit={handleSubmit}
       className="p-4 space-y-4 bg-background text-text-primary rounded shadow"
+      
     >
+      <h1 className="text-2xl font-bold mb-4">Filters</h1>
       <div>
         <label className="block text-sm font-medium">Destination</label>
         <input
