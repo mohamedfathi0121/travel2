@@ -19,16 +19,20 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {/* زر الفتح/الإغلاق */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition"
-      >
-        {isOpen ? <FaTimes /> : <FaComments />}
-      </button>
+     {!isOpen && (
+  <button
+    onClick={() => setIsOpen(true)}
+    className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition"
+  >
+    <FaComments />
+  </button>
+)}
+
 
       {/* نافذة الدردشة */}
       {isOpen && (
-        <div className="mt-2 w-80 h-96 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-xl shadow-2xl flex flex-col">
+        <div className="mt-2 w-[400px] h-[550px] bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-xl shadow-2xl flex flex-col">
+
           {/* الهيدر */}
           <div className="bg-blue-600 text-white px-4 py-2 rounded-t-xl flex justify-between items-center">
             <span className="font-bold">Chat with admin</span>
