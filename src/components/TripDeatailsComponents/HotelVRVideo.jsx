@@ -1,33 +1,40 @@
-import 'aframe';
-import { Scene } from 'aframe-react';
+import React from 'react';
+import { Scene, Entity } from 'aframe-react';
 
 export default function HotelVRVideo() {
-  return (
-    <div className="my-6">
-      <h3 className="text-2xl font-semibold mb-4 text-center"> Virtual Hotel Tour (VR)</h3>
-      <div className="rounded-xl shadow-lg overflow-hidden">
-        <Scene embedded>
-          <a-assets>
-            <video
-              id="hotelTour"
-              src="/videos/hotel-tour.mp4"  // ← مسار الفيديو
-              autoPlay
-              loop
-              muted
-              crossorigin="anonymous"
-              playsInline
-            ></video>
-          </a-assets>
+  const handleClick = () => {
+    window.open('/videos/hotel-tour.mp4', '_blank');
+  };
 
-          <a-video
-            src="#hotelTour"
-            width="16"
-            height="9"
-            position="0 1.6 -4"
-            rotation="0 0 0"
-          ></a-video>
-        </Scene>
+  return (
+    <div className="flex items-center justify-center ">
+      <div className="text-center max-w-xl w-full">
+        {/* Title */}
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+          Virtual Tour Inside the Hotel (VR)
+        </h2>
+
+        {/* Video preview (no controls) */}
+        <div
+          onClick={handleClick}
+          className="cursor-pointer rounded-xl overflow-hidden shadow-lg border border-gray-300 dark:border-gray-700 transition hover:scale-105"
+        >
+          <video
+            src="/videos/hotel-tour.mp4"
+            muted
+            playsInline
+            preload="metadata"
+            controls={false}
+            className="w-full h-[400px] object-cover pointer-events-none"
+          />
+        </div>
+
+        {/* Note */}
+        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          Click the video to watch in full screen
+        </p>
       </div>
     </div>
   );
 }
+

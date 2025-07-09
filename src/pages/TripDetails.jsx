@@ -8,6 +8,8 @@ import NotIncludedItems from "../components/TripDeatailsComponents/NotIncludedIt
 import RoomPrices from "../components/TripDeatailsComponents/RoomPrices";
 import HotelNotes from "../components/TripDeatailsComponents/HotelNotes";
 import HotelLocation from "../components/TripDeatailsComponents/HotelLocation";
+import ReviewSection from "../components/TripDeatailsComponents/Reviews";
+import InquiryFormSection from "../components/TripDeatailsComponents/InquiryForm";
 
 export default function TripDetails() {
   return (
@@ -18,7 +20,8 @@ export default function TripDetails() {
         <meta property="og:title" content="تفاصيل الرحلة - شرم الشيخ" />
         <meta property="og:description" content="أفضل عروض الرحلات والفنادق في شرم الشيخ." />
       </Helmet> */}
-      <div className="p-4 space-y-6">
+      <div className="min-h-screen bg-background text-black p-4 space-y-6">
+
         <StatsSection />
         <HotelName />
         <HotelVRVideo />
@@ -28,6 +31,8 @@ export default function TripDetails() {
         <NotIncludedItems />
         <RoomPrices />
         <HotelNotes />
+        <ReviewSection/>
+        <InquiryFormSection/>
         <HotelLocation />
 
       <button
