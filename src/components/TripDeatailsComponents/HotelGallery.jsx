@@ -8,7 +8,7 @@ export default function HotelGallery() {
     "https://flyingcarpetholidays.com/files/large/1267958430-%D9%81%D9%86%D8%AF%D9%82-%D9%83%D9%88%D9%86%D9%83%D9%88%D8%B1%D8%AF-%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85-%D8%B4%D8%B1%D9%85-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE.jpg",
     "https://flyingcarpetholidays.com/files/large/48035786-%D9%81%D9%86%D8%AF%D9%82-%D9%83%D9%88%D9%86%D9%83%D9%88%D8%B1%D8%AF-%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85-%D8%B4%D8%B1%D9%85-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%AD%D9%85%D8%A7%D9%85-%D8%A7%D9%84%D8%B3%D8%A8%D8%A7%D8%AD%D9%87.jpg",
     "https://flyingcarpetholidays.com/files/large/285403540-%D9%81%D9%86%D8%AF%D9%82-%D8%A8%D8%A7%D8%B1%D9%88%D8%AA%D9%8A%D9%84-%D8%A3%D9%83%D9%88%D8%A7-%D8%A8%D8%A7%D8%B1%D9%83-%D8%B4%D8%B1%D9%85-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE---%D8%A7%D9%84%D9%85%D8%B3%D8%A8%D8%AD.jpg",
-    "https://flyingcarpetholidays.com/files/large/891827-%D9%81%D9%86%D8%AF%D9%82-%D8%A8%D8%A7%D8%B1%D9%88%D8%AA%D9%8A%D9%84-%D8%A3%D9%83%D9%88%D8%A7-%D8%A8%D8%A7%D8%B1%D9%83-%D8%B4%D8%B1%D9%85-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE---%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.jpg"
+    "https://flyingcarpetholidays.com/files/large/891827-%D9%81%D9%86%D8%AF%D9%82-%D8%A8%D8%A7%D8%B1%D9%88%D8%AA%D9%8A%D9%84-%D8%A3%D9%83%D9%88%D8%A7-%D8%A8%D8%A7%D8%B1%D9%83-%D8%B4%D8%B1%D9%85-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE---%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.jpg",
   ];
 
   const scrollRef = useRef(null);
@@ -23,7 +23,7 @@ export default function HotelGallery() {
     scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
 
-  const openImage = (index) => {
+  const openImage = index => {
     setCurrentIndex(index);
     setSelectedImage(images[index]);
   };
@@ -45,8 +45,10 @@ export default function HotelGallery() {
   };
 
   return (
-    <div className="my-6 relative">
-      <h3 className="text-2xl font-semibold mb-4 text-right">معرض صور الفندق</h3>
+    <div className="my-6 relative overflow-hidden">
+      <h3 className="text-2xl font-semibold mb-4 text-center">
+        Hotel Photo Gallery
+      </h3>
 
       {/* سهم اليسار */}
       <button
@@ -112,16 +114,6 @@ export default function HotelGallery() {
         </div>
       )}
 
-      {/* إخفاء الاسكرول Tailwind */}
-      <style jsx>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }

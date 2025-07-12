@@ -10,6 +10,7 @@ import Complaint from "./pages/SendComplaint";
 import { ThemeProvider } from "./context/ThemeProvider";
 import AuthLayout from "./components/layouts/AuthLayout";
 import LoginPage from "./pages/auth/Login";
+import RegisterPage from "./pages/auth/Register";
 function App() {
   return (
     <>
@@ -25,7 +26,7 @@ function App() {
             </Route>
             <Route path="/" element={<AuthLayout />}>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<h1>hello Register</h1>} />
+              <Route path="/register" element={<RegisterPage />} />
             </Route>
             <Route path="*" element={<h1>hello login</h1>} />
           </Routes>

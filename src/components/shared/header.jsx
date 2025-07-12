@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiSearch, FiMenu, FiX, FiUser } from "react-icons/fi";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,14 +10,14 @@ export default function Header() {
   return (
     <header className="w-full bg-background shadow-md z-50 relative border-b border-gray-300">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4 md:px-8 py-4">
-        <div className="text-xl md:text-2xl font-bold text-text-primary whitespace-nowrap">
+        <Link to='/' className="text-xl md:text-2xl font-bold text-text-primary whitespace-nowrap">
           AdventureCo
-        </div>
+        </Link>
 
         <ul className="hidden md:flex space-x-6 ml-6 text-sm font-medium text-text-primary">
           <li>
             <a href="#" className="hover:text-blue-600">
-              Explore
+              Home
             </a>
           </li>
           <li>

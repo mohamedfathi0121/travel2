@@ -4,8 +4,7 @@ import { Scene } from 'aframe-react';
 export default function HotelVRVideo() {
   return (
     <div className="my-6">
-      <h3 className="text-2xl font-semibold mb-4 text-center"> جوله داخل الفندق (VR)</h3>
-
+      <h3 className="text-2xl font-semibold mb-4 text-center"> Virtual Hotel Tour (VR)</h3>
       <div className="rounded-xl shadow-lg overflow-hidden">
         <Scene embedded>
           <a-assets>
@@ -15,7 +14,7 @@ export default function HotelVRVideo() {
               autoPlay
               loop
               muted
-              crossorigin="anonymous"
+              crossOrigin="anonymous"
               playsInline
             ></video>
           </a-assets>

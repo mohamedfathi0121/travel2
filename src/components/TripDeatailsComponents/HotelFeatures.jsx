@@ -1,12 +1,20 @@
 export default function HotelFeatures() {
   return (
-    <section className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4 text-right">
-      <h2 className="text-xl font-semibold mb-2 text-blue-800">مميزات الفندق:</h2>
-      <ul className=" pr-6 text-gray-700 list-disc">
-        <li>يطل فندق فالكون هيلز على جبال سيناء ويوفر أماكن إقامة بسعر معقول وقيمة عالية مع شاطئين قريبين، ويتميز بمسبحين خارجيين وملاعب تنس وسبا مع علاجات المساج.</li>
-        <li>يقع الفندق على هضبة رأس أم سيد ويوفر معدات الغوص لاستكشاف الشعاب المرجانية في البحر الأحمر، ويبعد شاطئ أمفورا 750 مترًا فقط، بينما يمكن الوصول إلى شاطئ فالكون هيلز الخاص من خلال خدمة نقل ذهاباً وإياباً مجاناً.</li>
-        <li>تفتح جميع الغرف على شرفة خاصة وتحتوي على تلفزيون مع قنوات فضائية وحمامات داخلية مع حوض استحمام ودُش، ويتوفر تكييف الهواء بشكل قياسي.</li>
-        <li>مكن للضيوف تناول المشروبات المنعشة على مدار الساعة والاستفادة من بار المسبح، كما تتوفر خدمة نقل ذهاباً وإياباً مجاناً إلى خليج نعمة الشهير، ويبعد مطار شرم الشيخ 17 كم وتتوفر مواقف مجانية خاصة للسيارات في الفندق.</li>
+    <section className="bg-background p-4 rounded-lg shadow-sm mb-4 text-left">
+      <h2 className="text-xl font-semibold mb-2 text-text-primary">Hotel Features:</h2>
+      <ul className="pl-6 text-text-hard-secondary list-disc">
+        <li>
+          Falcon Hills Hotel overlooks the Sinai Mountains and offers affordable, high-value accommodations with two nearby beaches. It features two outdoor pools, tennis courts, and a spa with massage treatments.
+        </li>
+        <li>
+          Located on Ras Umm El Sid plateau, the hotel provides diving equipment to explore the Red Sea coral reefs. Amphoras Beach is just 750 meters away, and Falcon Hills' private beach is accessible via a free shuttle service.
+        </li>
+        <li>
+          All rooms open onto a private balcony and include satellite TV and en-suite bathrooms with a bathtub and shower. Air conditioning is standard in all rooms.
+        </li>
+        <li>
+          Guests can enjoy refreshing drinks around the clock at the pool bar. A free shuttle service is available to the famous Naama Bay. Sharm El Sheikh Airport is 17 km away, and free private parking is available at the hotel.
+        </li>
       </ul>
     </section>
   );
