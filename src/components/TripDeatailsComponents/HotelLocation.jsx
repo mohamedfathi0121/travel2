@@ -1,17 +1,15 @@
+import { FaMapMarkerAlt, FaUmbrellaBeach, FaPlaneDeparture, FaShuttleVan, FaCar } from "react-icons/fa";
+
 export default function HotelLocation() {
   return (
-    <section className="bg-background p-4 rounded-lg shadow-sm mb-4 text-left">
+    <section className="bg-background p-4 rounded-lg shadow-sm mb-4 text-left border border-gray-200 dark:border-blue-900 dark:shadow-[0_4px_32px_0_rgba(0,40,120,0.25)]">
       <h2 className="text-xl font-semibold mb-2 text-text-primary">Hotel Location:</h2>
-      <p className=" text-text-hard-secondary leading-loose">
-        📍 Falcon Hills Hotel is located in the Ras Umm El Sid area of Sharm El Sheikh, just minutes from the famous Naama Bay.
-        <br />
-        🏖️ The hotel is approximately 750 meters from Amphoras Beach.
-        <br />
-        ✈️ Sharm El Sheikh International Airport is about 17 km away.
-        <br />
-        🚌 Free shuttle service is available to and from Naama Bay and the hotel's private beach.
-        <br />
-        🚗 Free parking is available at the hotel.
+      <p className="text-text-hard-secondary leading-loose flex flex-col gap-1">
+        <span><FaMapMarkerAlt className="inline mr-2 text-blue-600" />Falcon Hills Hotel is located in the Ras Umm El Sid area of Sharm El Sheikh, just minutes from the famous Naama Bay.</span>
+        <span><FaUmbrellaBeach className="inline mr-2 text-yellow-500" />The hotel is approximately 750 meters from Amphoras Beach.</span>
+        <span><FaPlaneDeparture className="inline mr-2 text-gray-500" />Sharm El Sheikh International Airport is about 17 km away.</span>
+        <span><FaShuttleVan className="inline mr-2 text-green-600" />Free shuttle service is available to and from Naama Bay and the hotel's private beach.</span>
+        <span><FaCar className="inline mr-2 text-gray-700" />Free parking is available at the hotel.</span>
       </p>
 
       {/* Google Map (optional) */}
