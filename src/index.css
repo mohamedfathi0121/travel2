@@ -11,14 +11,14 @@
   --color-text-primary: #000000;
   --color-text-secondary: #59738c;
   --color-text-hard-secondary: #808080;
-  --color-input:#E8EDF2
+  --color-input:#E8EDF2;
 
-  --color-button-primary: #367dc9
-  --color-button-primary-hover: #135296
+  --color-button-primary: #367dc9;
+  --color-button-primary-hover: #135296;
 
 
-  --color-btn-primary: #367dc9
-  --color-btn-primary-hover: #135296
+  --color-btn-primary: #367dc9;
+  --color-btn-primary-hover: #135296;
   --color-header-background:#E5E8EB
 
 }
@@ -41,3 +41,5 @@
 
   }
 }
+
+
