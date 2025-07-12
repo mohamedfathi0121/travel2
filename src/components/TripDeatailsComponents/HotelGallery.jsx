@@ -45,10 +45,8 @@ export default function HotelGallery() {
   };
 
   return (
-    <div className="my-6 relative overflow-hidden">
-      <h3 className="text-2xl font-semibold mb-4 text-center">
-        Hotel Photo Gallery
-      </h3>
+    <div className="my-6 relative">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-text-primary">Hotel Photo Gallery</h3>
 
       {/* سهم اليسار */}
       <button

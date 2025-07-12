@@ -8,9 +8,13 @@ import TripDetails from "./pages/TripDetails";
 import MyTrips from "./pages/myTrips/TripPage";
 import Complaint from "./pages/SendComplaint";
 import { ThemeProvider } from "./context/ThemeProvider";
+<<<<<<< HEAD
 import AuthLayout from "./components/layouts/AuthLayout";
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
+=======
+import ChatWidget from "./components/Chatcomponent/ChatWidget";
+>>>>>>> d77da88bec21ff8ce8a833eedef3f7cc5b168785
 function App() {
   return (
     <>
@@ -33,6 +37,7 @@ function App() {
         </BrowserRouter>
       </ThemeProvider>
       <Toaster />
+      <ChatWidget />
     </>
   );
 }
