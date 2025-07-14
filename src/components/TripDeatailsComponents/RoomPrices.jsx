@@ -1,4 +1,6 @@
-export default function PriceTable() {
+export default function RoomPrices({ roomPrices }) {
+  if (!roomPrices) return null;
+
   return (
     <section className="overflow-x-auto mb-6 rounded-2xl shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-blue-900 p-4 dark:shadow-[0_4px_32px_0_rgba(0,40,120,0.25)]">
       <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-blue-300 tracking-tight">
@@ -17,24 +19,24 @@ export default function PriceTable() {
         <tbody>
           <tr>
             <td className="p-3 border-b border-gray-200 dark:border-gray-700">
-              10/8/2025
+              {roomPrices.startDate}
             </td>
             <td className="p-3 border-b border-gray-200 dark:border-gray-700">
-              15/8/2025
+              {roomPrices.endDate}
             </td>
             <td className="p-3 border-b border-gray-200 dark:border-gray-700 font-bold">
               <span className="inline-block px-3 py-1 rounded-lg bg-green-100 dark:bg-green-700/60 text-green-700 dark:text-green-200 shadow-sm">
-                1000 EGP
+                {roomPrices.single} EGP
               </span>
             </td>
             <td className="p-3 border-b border-gray-200 dark:border-gray-700 font-bold">
               <span className="inline-block px-3 py-1 rounded-lg bg-blue-100 dark:bg-blue-700/60 text-blue-700 dark:text-blue-200 shadow-sm">
-                1800 EGP
+                {roomPrices.double} EGP
               </span>
             </td>
             <td className="p-3 border-b border-gray-200 dark:border-gray-700 font-bold">
               <span className="inline-block px-3 py-1 rounded-lg bg-purple-100 dark:bg-purple-700/60 text-purple-700 dark:text-purple-200 shadow-sm">
-                2500 EGP
+                {roomPrices.triple} EGP
               </span>
             </td>
           </tr>

@@ -17,7 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<LandingPage />} />
-              <Route path="/trip-details" element={<TripDetails />} />
+              <Route path="/trip-details/:tripId" element={<TripDetails />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/mytrips" element={<MyTrips />} />
               <Route path="/complaint" element={<Complaint />} />

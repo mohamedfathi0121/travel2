@@ -42,15 +42,15 @@ function NumberInput({ value, setValue, min = 0, max, className = "" }) {
   );
 }
 
-export default function InquiryFormSection() {
+export default function InquiryFormSection({ priceData }) {
   const [singleRooms, setSingleRooms] = useState(0);
   const [doubleRooms, setDoubleRooms] = useState(0);
   const [tripleRooms, setTripleRooms] = useState(0);
   const [members, setMembers] = useState(1);
 
-  const singleRoomCost = 1000;
-  const doubleRoomCost = 1800;
-  const tripleRoomCost = 2500;
+  const singleRoomCost = Number(priceData?.price_single || 0);
+  const doubleRoomCost = Number(priceData?.price_double || 0);
+  const tripleRoomCost = Number(priceData?.price_triple || 0);
 
   const totalCost =
     singleRooms * singleRoomCost +
