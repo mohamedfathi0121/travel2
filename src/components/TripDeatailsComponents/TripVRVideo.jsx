@@ -1,9 +1,10 @@
 import React from 'react';
 import { Scene, Entity } from 'aframe-react';
 
-export default function HotelVRVideo() {
+export default function TripVRVideo({ videoUrl }) {
+
   const handleClick = () => {
-    window.open('/videos/hotel-tour.mp4', '_blank');
+    window.open(videoUrl, '_blank');
   };
 
   return (
@@ -11,7 +12,7 @@ export default function HotelVRVideo() {
       <div className="text-center max-w-xl w-full">
         {/* Title */}
         <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
-          Virtual Tour Inside the Hotel (VR)
+          Trip Video
         </h2>
 
         {/* Video preview (no controls) */}
@@ -20,7 +21,7 @@ export default function HotelVRVideo() {
           className="cursor-pointer rounded-xl overflow-hidden shadow-lg border border-gray-300 dark:border-gray-700 transition hover:scale-105"
         >
           <video
-            src="/videos/hotel-tour.mp4"
+            src={videoUrl}
             muted
             playsInline
             preload="metadata"
@@ -37,4 +38,3 @@ export default function HotelVRVideo() {
     </div>
   );
 }
-
