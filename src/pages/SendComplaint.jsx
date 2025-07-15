@@ -1,23 +1,52 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../supabase";
 
-
-const companies = [
-  { id: 1, name: "Sky Travel", email: "contact@skytravel.com" },
-  { id: 2, name: "Dream Tours", email: "support@dreamtours.com" },
-  { id: 3, name: "AdventureX", email: "hello@adventurex.com" },
-];
-
-const SendComplaint = () => {
-  const [company, setCompany] = useState("");
+const SendComplaint = ({ userId }) => {
+  const [companies, setCompanies] = useState([]);
+  const [selectedEmail, setSelectedEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      const { data: bookings, error } = await supabase
+        .from("bookings")
+        .select(`id, trip_schedules ( date, base_trips ( company_id, companies ( id, name, email ) ) )`)
+        .eq("user_id", userId);
+
+      if (error) {
+        console.error("Error fetching bookings:", error);
+        return;
+      }
+
+      const today = new Date();
+      const completed = bookings.filter((b) => {
+        const date = new Date(b.trip_schedules?.date);
+        return date < today;
+      });
+
+      const unique = [];
+      const ids = new Set();
+
+      for (const b of completed) {
+        const company = b.trip_schedules?.base_trips?.companies;
+        if (company && !ids.has(company.id)) {
+          unique.push(company);
+          ids.add(company.id);
+        }
+      }
+
+      setCompanies(unique);
+    };
+
+    fetchCompanies();
+  }, [userId]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const selected = companies.find((c) => c.id === parseInt(company));
-    if (!selected) return alert("Please select a company.");
+    if (!selectedEmail) return alert("Please select a company.");
 
-    const mailto = `mailto:${selected.email}?subject=${encodeURIComponent(
+    const mailto = `mailto:${selectedEmail}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(message)}`;
 
@@ -26,7 +55,7 @@ const SendComplaint = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-xl bg-input p-8 rounded-md  shadow-text-primary flex flex-col justify-center">
+      <div className="w-full max-w-xl bg-input p-8 rounded-md shadow-text-primary flex flex-col justify-center">
         <h2 className="text-2xl font-semibold text-text-primary mb-6">
           Send Complaint
         </h2>
@@ -38,15 +67,15 @@ const SendComplaint = () => {
             </label>
             <select
               className="w-full px-4 py-2 border border-text-primary bg-background text-text-primary rounded-md shadow-sm focus:outline-none"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
+              value={selectedEmail}
+              onChange={(e) => setSelectedEmail(e.target.value)}
               required
             >
               <option value="" disabled>
                 -- Choose a company --
               </option>
               {companies.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.email}>
                   {c.name}
                 </option>
               ))}
@@ -83,7 +112,7 @@ const SendComplaint = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-6 py-2 bg-button-primary text-button-primary rounded-full hover:bg-button-primary-hover transition-all duration-200"
+              className="px-6 py-2 rounded-full text-button-text bg-button-primary hover:bg-button-primary-hover transition-all duration-200"
             >
               Send
             </button>
