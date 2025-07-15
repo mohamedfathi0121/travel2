@@ -1,40 +1,27 @@
 import { useState } from "react";
 
 const SidebarFilters = ({ onFilter }) => {
-  const [destination, setDestination] = useState("");
   const [cost, setCost] = useState("");
   const [date, setDate] = useState("");
+  const [country, setCountry] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onFilter({ destination, cost, date });
+    onFilter({ cost, date, country });
   };
 
   return (
     <form
       onSubmit={handleSubmit}
       className="p-4 space-y-4 bg-background text-text-primary rounded shadow"
-      
     >
-      <h1 className="text-2xl font-bold mb-4">Filters</h1>
-      <div>
-        <label className="block text-sm font-medium">Destination</label>
-        <input
-          type="text"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-          className="w-full border rounded p-2 bg-input text-text-primary placeholder:text-text-secondary"
-          placeholder="Enter destination"
-        />
-      </div>
-
       <div>
         <label className="block text-sm font-medium">Max Cost</label>
         <input
           type="number"
           value={cost}
           onChange={(e) => setCost(e.target.value)}
-          className="w-full border rounded p-2 bg-input text-text-primary placeholder:text-text-secondary"
+          className="w-full border rounded p-2 bg-input"
           placeholder="Enter max cost"
         />
       </div>
@@ -45,13 +32,24 @@ const SidebarFilters = ({ onFilter }) => {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full border rounded p-2 bg-input text-text-primary"
+          className="w-full border rounded p-2 bg-input"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Country</label>
+        <input
+          type="text"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="w-full border rounded p-2 bg-input"
+          placeholder="Enter country"
         />
       </div>
 
       <button
         type="submit"
-        className="px-4 py-2 rounded text-white bg-btn-primary hover:bg-btn-primary-hover transition"
+        className="px-4 py-2 rounded text-white bg-button-primary hover:bg-button-primary-hover transition-all duration-200"
       >
         Filter
       </button>
