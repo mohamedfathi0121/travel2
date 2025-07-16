@@ -3,11 +3,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { step3Schema } from '../../schemas/registrationSchemas'; // Assuming you have this
 import  supabase  from '../../utils/supabase'; // Make sure to import your supabase client
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Step3 = ({ prevStep, formData }) => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: zodResolver(step3Schema)
     });
+    const navigate = useNavigate();
 
     const [preview, setPreview] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,7 +58,9 @@ const Step3 = ({ prevStep, formData }) => {
             }
 
             console.log('Success:', data);
-            alert('Registration Complete! Please check your email to verify your account.');
+            toast.success('Registration Completed Successfully!');
+            navigate('/login'); // Redirect to login page after successful registration
+            
             // Optionally, redirect the user to a success page or login page
             // window.location.href = '/login';
 

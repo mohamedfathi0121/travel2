@@ -3,87 +3,101 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schemas/registrationSchemas";
 import Input from "../../components/auth/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const onSubmit = data => {
-    console.log("Login Data:", data);
-    alert("Login successful! Check the console for data.");
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver: zodResolver(loginSchema) });
+  const { signIn } = useAuth();
+  
+  const Navigate = useNavigate();
+  const onSubmit = async (data) => {
+    const toastId = toast.loading('Signing in...');
+    try {
+      const { error } = await signIn(data.email, data.password);
+      if (error) throw error;
+      toast.success('Login successful!', { id: toastId });
+      Navigate('/'); // Redirect to home or dashboard after successful login
+    } catch (error) {
+      console.error("Sign-in error:", error);
+      toast.error(error.message || 'Invalid email or password.', { id: toastId });
+    }
   };
 
   return (
-    <div className="bg-white min-h-screen flex flex-col font-sans">
-      <main className="flex-grow flex items-center justify-center">
-        <div className="w-full max-w-md px-4 sm:px-6 lg:px-8 py-12">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-800 text-center">
-              Welcome
-            </h1>
-            <div className="space-y-4">
-              <Input
-                name="email"
-                label="Email"
+    <div className="min-h-screen bg-background flex justify-center items-center px-4 pt-12 pb-16">
+      <div className="w-full max-w-xl bg-background border border-gray-200 rounded-lg shadow-md px-6 py-10 space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-text-primary">Welcome Back</h1>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-text-primary block mb-2">
+                Email
+              </label>
+              <input
                 type="email"
-                register={register}
-                error={errors.email}
-                placeholder="Email"
+                {...register('email')}
+                placeholder="Enter your email"
+                className={`w-full bg-input px-4 py-3 border text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
-              <Input
-                name="password"
-                label="Password"
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-text-primary block mb-2">
+                Password
+              </label>
+              <input
                 type="password"
-                register={register}
-                error={errors.password}
-                placeholder="Password"
+                {...register('password')}
+                placeholder="Enter your password"
+                className={`w-full bg-input px-4 py-3 border text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+                  errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              )}
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-            </div>
+          </div>
+
+          
+
+          <div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={isSubmitting}
+              className="w-full py-3 rounded-2xl bg-button-primary text-white font-semibold text-sm hover:bg-btn-primary-hover transition disabled:opacity-50"
             >
-              Log in
+              {isSubmitting ? 'Signing in...' : 'Log in'}
             </button>
-            <div className="text-center">
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 hover:underline"
-              >
-                Forgot password?
-              </a>
-            </div>
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account?{" "}
+          </div>
+
+          <div className="text-center space-y-2">
+            <a href="#" className="text-sm font-medium text-blue-600 hover:underline">
+              Forgot password?
+            </a>
+            <p className="text-sm text-gray-600">
+              Don't have an account?{' '}
               <Link to="/register" className="font-medium text-blue-600 hover:underline">
                 Sign up
               </Link>
             </p>
-          </form>
-        </div>
-      </main>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
