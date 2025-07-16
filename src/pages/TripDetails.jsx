@@ -4,7 +4,7 @@ import { supabase } from "../utils/supabaseClient";
 
 import StatsSection from "../components/TripDeatailsComponents/StatsSection";
 import TripName from "../components/TripDeatailsComponents/TripName";
-import TripVRVideo from "../components/TripDeatailsComponents/TripVRVideo";
+import TripVRVideo from "../components/TripDeatailsComponents/VrPlayer";
 import TripGallery from "../components/TripDeatailsComponents/TripGallery";
 import TripDescription from "../components/TripDeatailsComponents/TripDescription";
 import IncludedItems from "../components/TripDeatailsComponents/IncludedItems";
@@ -14,6 +14,8 @@ import HotelNotes from "../components/TripDeatailsComponents/HotelNotes";
 import HotelLocation from "../components/TripDeatailsComponents/HotelLocation";
 import ReviewSection from "../components/TripDeatailsComponents/Reviews";
 import InquiryFormSection from "../components/TripDeatailsComponents/InquiryForm";
+import TripDetailsSkeleton from "../components/skeleton/TripDetailsSkeleton";
+import VrCard from "../components/TripDeatailsComponents/VrCard";
 
 export default function TripDetails() {
   const { tripId } = useParams();
@@ -132,7 +134,8 @@ export default function TripDetails() {
         rating={tripData.average_rating}
         ratingCount={tripData.rating_counts}
       />
-      <TripVRVideo videoUrl={tripData.video_url} />
+
+      <VrCard image={tripData.photo_urls[0]  } videoUrl={tripData.video_url}/>
       <TripGallery images={tripData.photo_urls} />
       <TripDescription description={tripData.description} />
       <IncludedItems includedItems={includedItems} />
