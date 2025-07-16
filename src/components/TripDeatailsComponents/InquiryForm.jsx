@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function NumberInput({ value, setValue, min = 0, max, className = "" }) {
   return (
@@ -42,7 +42,7 @@ function NumberInput({ value, setValue, min = 0, max, className = "" }) {
   );
 }
 
-export default function InquiryFormSection({ priceData }) {
+export default function InquiryFormSection({ priceData, setBookingInfo }) {
   const [singleRooms, setSingleRooms] = useState(0);
   const [doubleRooms, setDoubleRooms] = useState(0);
   const [tripleRooms, setTripleRooms] = useState(0);
@@ -56,6 +56,19 @@ export default function InquiryFormSection({ priceData }) {
     singleRooms * singleRoomCost +
     doubleRooms * doubleRoomCost +
     tripleRooms * tripleRoomCost;
+
+  // ✅ تحديث بيانات الحجز في ال state الأب
+  useEffect(() => {
+    if (typeof setBookingInfo === "function") {
+      setBookingInfo({
+        members,
+        singleRooms,
+        doubleRooms,
+        tripleRooms,
+        totalCost,
+      });
+    }
+  }, [members, singleRooms, doubleRooms, tripleRooms, totalCost]);
 
   return (
     <section className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg w-full my-12 text-left border border-gray-200 dark:border-blue-900 dark:shadow-[0_4px_32px_0_rgba(0,40,120,0.25)]">
