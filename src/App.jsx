@@ -11,6 +11,7 @@ import { ThemeProvider } from "./context/ThemeProvider";
 import AuthLayout from "./components/layouts/AuthLayout";
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
+import VrPlayer from "./components/TripDeatailsComponents/VrPlayer";
 function App() {
   return (
     <>
@@ -19,7 +20,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<LandingPage />} />
-              <Route path="/trip-details" element={<TripDetails />} />
+               <Route path="/trip-details/:tripId/" element={<TripDetails />} />
+              <Route path="/vrplayer" element={<VrPlayer />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/mytrips" element={<MyTrips />} />
               <Route path="/complaint" element={<Complaint />} />
