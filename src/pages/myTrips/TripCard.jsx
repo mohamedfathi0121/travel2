@@ -4,8 +4,13 @@ export default function TripCard({ title, date, image }) {
       <div className="flex-1 flex flex-col items-start">
         <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
         <p className="text-sm text-text-secondary mb-3">{date}</p>
+<<<<<<< HEAD
         <button className="inline-flex items-center gap-1 bg-text-primary hover:bg-btn-primary-hover text-background px-4 py-1.5 rounded-md text-sm font-medium transition-colors duration-200">
           Pay Now{" "}
+=======
+        <button className="inline-flex items-center gap-1 bg-button-primary hover:bg-button-primary-hover hover:shadow-md  shadow-text-hard-secondary  text-button-text px-4 py-1.5 rounded-md text-sm font-medium transition-colors duration-200">
+          Pay Now
+>>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
           <span role="img" aria-label="card">
             💳
           </span>

@@ -11,10 +11,19 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.51.0",
     "@tailwindcss/vite": "^4.1.11",
     "aframe": "^1.7.1",
     "aframe-react": "^4.4.0",
+=======
+    "@supabase/supabase-js": "^2.50.5",
+    "@tailwindcss/vite": "^4.1.11",
+    "aframe": "^1.7.1",
+    "aframe-react": "^4.4.0",
+    "dayjs": "^1.11.13",
+    "lucide-react": "^0.525.0",
+>>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
     "react-dom": "^19.1.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.59.0",
