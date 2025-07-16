@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { step3Schema } from '../../schemas/registrationSchemas';
+import { step3Schema } from '../../schemas/registrationSchemas'; // Assuming you have this
+import  supabase  from '../../utils/supabase'; // Make sure to import your supabase client
 
 const Step3 = ({ prevStep, formData }) => {
-    const { handleSubmit, register, watch } = useForm({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: zodResolver(step3Schema)
     });
+
     const [preview, setPreview] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+
     const photo = watch('profilePhoto');
 
     useEffect(() => {
@@ -19,9 +24,47 @@ const Step3 = ({ prevStep, formData }) => {
         }
     }, [photo]);
 
-    const onSubmit = () => {
-        console.log('Final Form Data:', formData);
-        alert('Registration Complete! Check the console for the final data.');
+    const onSubmit = async (step3Data) => {
+        setIsSubmitting(true);
+        setError(null);
+
+        // Combine data from all steps
+        const finalData = { ...formData, ...step3Data };
+        
+        try {
+            // Create a FormData object to send to the Edge Function
+            const apiFormData = new FormData();
+            apiFormData.append('email', finalData.email);
+            apiFormData.append('password', finalData.password);
+            apiFormData.append('displayName', finalData.fullName); // Match Edge Function expectation
+            apiFormData.append('age', finalData.age);
+            apiFormData.append('gender', finalData.gender);
+            apiFormData.append('dateOfBirth', finalData.dob); // Match Edge Function expectation
+            apiFormData.append('country', finalData.country);
+            apiFormData.append('city', finalData.city);
+            apiFormData.append('phoneNumber', finalData.phoneNumber || ''); // Add phone if you have it
+            apiFormData.append('avatarFile', finalData.profilePhoto[0]);
+
+            // Invoke the Supabase Edge Function
+            const { data, error } = await supabase.functions.invoke('user-register', {
+                body: apiFormData,
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            console.log('Success:', data);
+            alert('Registration Complete! Please check your email to verify your account.');
+            // Optionally, redirect the user to a success page or login page
+            // window.location.href = '/login';
+
+        } catch (err) {
+            console.error('Submission failed:', err);
+            setError(err.message || 'An unexpected error occurred.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
     
     return (
@@ -47,11 +90,14 @@ const Step3 = ({ prevStep, formData }) => {
                         <input id="profilePhoto" type="file" {...register('profilePhoto')} className="hidden" accept="image/*" />
                     </>
                 )}
+                {errors.profilePhoto && <p className="text-red-500 text-sm mt-2">{errors.profilePhoto.message}</p>}
             </div>
 
+            {error && <p className="text-red-500 text-center">{error}</p>}
+
             <div className="flex justify-center">
-                <button type="submit" className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors">
-                    Complete Registration
+                <button type="submit" disabled={isSubmitting} className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300">
+                    {isSubmitting ? 'Completing Registration...' : 'Complete Registration'}
                 </button>
             </div>
              <button type="button" onClick={prevStep} className="w-full text-center text-sm text-gray-600 hover:underline mt-4">
