@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from "../utils/supabaseClient";
 
 import StatsSection from "../components/TripDeatailsComponents/StatsSection";
@@ -14,12 +14,11 @@ import HotelNotes from "../components/TripDeatailsComponents/HotelNotes";
 import HotelLocation from "../components/TripDeatailsComponents/HotelLocation";
 import ReviewSection from "../components/TripDeatailsComponents/Reviews";
 import InquiryFormSection from "../components/TripDeatailsComponents/InquiryForm";
-import TripDetailsSkeleton from "../components/skeleton/TripDetailsSkeleton";
 import VrCard from "../components/TripDeatailsComponents/VrCard";
 
 export default function TripDetails() {
   const { tripId } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [tripData, setTripData] = useState(null);
   const [includedItems, setIncludedItems] = useState("");
@@ -30,6 +29,9 @@ export default function TripDetails() {
   const [statsData, setStatsData] = useState(null);
   const [locationUrl, setLocationUrl] = useState("");
   const [bookingInfo, setBookingInfo] = useState({});
+  const [scheduleId, setScheduleId] = useState(null); // ✅ جديد
+  const [errorMsg, setErrorMsg] = useState("");
+
 
   useEffect(() => {
     const fetchTripData = async () => {
@@ -55,11 +57,12 @@ export default function TripDetails() {
 
       const { data: scheduleData, error: scheduleError } = await supabase
         .from("trip_schedules")
-        .select("price_include, price_not_include, start_date, end_date, price, location_url")
+        .select("id, price_include, price_not_include, start_date, end_date, price, location_url")
         .eq("base_trip_id", tripId)
         .single();
 
       if (!scheduleError && scheduleData) {
+        setScheduleId(scheduleData.id); // ✅ حفظ id
         setIncludedItems(scheduleData.price_include || "");
         setNotIncludedText(scheduleData.price_not_include || "");
         setLocationUrl(scheduleData.location_url || "");
@@ -92,32 +95,71 @@ export default function TripDetails() {
     fetchTripData();
   }, [tripId]);
 
-  const handleBooking = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    alert("Please login to proceed with booking.");
+const handleBooking = async () => {
+  const userId = "1a0ff618-498e-4b3a-82bc-b9944b1f1f49"; // مؤقتًا
+  console.log("📦 Booking Info:", bookingInfo);
+console.log("📦 scheduleId:", scheduleId);
+console.log("📦 tripId:", tripId);
+console.log("📦 Final Payload:", {
+  user_id: userId,
+  trip_schedule_id: scheduleId,
+  base_trip_id: tripId,
+  booking_info: bookingInfo,
+});
+
+//   const userId = "1a0ff618-498e-4b3a-82bc-b9944b1f1f49"; // مؤقتًا
+
+  if (!scheduleId || !tripId) {
+    alert("لم يتم تحميل بيانات الرحلة أو الجدول الزمني.");
     return;
   }
 
-  const booking = {
-    user_id: user.id,
-    trip_id: tripId,
-    single_rooms: bookingInfo.singleRooms || 0,
-    double_rooms: bookingInfo.doubleRooms || 0,
-    triple_rooms: bookingInfo.tripleRooms || 0,
-    members: bookingInfo.members || 1,
-    total_cost: bookingInfo.totalCost || 0,
+  // ✅ التحقق من أن المستخدم اختار على الأقل غرفة واحدة
+  if (
+    (bookingInfo.singleRooms || 0) === 0 &&
+    (bookingInfo.doubleRooms || 0) === 0 &&
+    (bookingInfo.tripleRooms || 0) === 0
+  ) {
+    setErrorMsg("Please select the room first for continuous booking.");
+return;
+
+    
+  }
+
+  const payload = {
+    user_id: userId,
+    trip_schedule_id: scheduleId,
+    base_trip_id: tripId,
+    booking_info: bookingInfo,
   };
 
-  const { data, error } = await supabase.from("bookings").insert(booking).select().single();
+  try {
+    const response = await fetch(
+      "https://iklzpmnhifxwgmqydths.supabase.co/functions/v1/create-checkout-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // "Origin": window.location.origin,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
-  if (error) {
-    console.error("Booking failed:", error);
-    alert("Booking failed. Please try again.");
-  } else {
-    navigate("/payment", { state: { bookingId: data.id, total: data.total_cost } });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "فشل في إنشاء جلسة الدفع.");
+    }
+
+    window.location.href = result.url;
+  } catch (err) {
+    console.error("❌ Error creating checkout session:", err.message);
+    alert("فشل إنشاء جلسة الدفع. حاول مرة أخرى.");
   }
 };
+
+
 
 
   if (loading) return <div className="p-6 text-center text-lg">جارٍ تحميل تفاصيل الرحلة...</div>;
@@ -134,8 +176,8 @@ export default function TripDetails() {
         rating={tripData.average_rating}
         ratingCount={tripData.rating_counts}
       />
-
-      <VrCard image={tripData.photo_urls[0]  } videoUrl={tripData.video_url}/>
+      <TripVRVideo videoUrl={tripData.video_url} />
+      <VrCard image={tripData.photo_urls?.[0]} videoUrl={tripData.video_url} />
       <TripGallery images={tripData.photo_urls} />
       <TripDescription description={tripData.description} />
       <IncludedItems includedItems={includedItems} />
@@ -150,6 +192,11 @@ export default function TripDetails() {
         city={tripData.city}
       />
       <InquiryFormSection priceData={statsData?.price || {}} setBookingInfo={setBookingInfo} />
+       {errorMsg && (
+  <div className="max-w-2xl mx-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center">
+    {errorMsg}
+  </div>
+)}
       <HotelLocation locationUrl={locationUrl} />
 
       <button
@@ -161,3 +208,4 @@ export default function TripDetails() {
     </div>
   );
 }
+

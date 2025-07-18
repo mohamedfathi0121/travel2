@@ -7,9 +7,9 @@ export default function StatsSection({ statsData }) {
     );
   }
 
-  const totalTickets = statsData.available_tickets ?? 0;
-  const bookedTickets = 200 - totalTickets; // ممكن تتعدل لاحقاً لما نعمل جدول للحجوزات
-  const availableTickets = totalTickets-bookedTickets;
+ const totalTickets = statsData.available_tickets ?? 0;
+const bookedTickets = 200 - totalTickets;
+const availableTickets = totalTickets - bookedTickets;
   const lowestPrice = statsData.price?.price_triple ?? "Not Available";
   const status = statsData.status === "completed" ? "❌ Completed" : "✅ Available";
 
