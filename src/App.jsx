@@ -6,6 +6,7 @@ import PaymentPage from "./pages/payment_page";
 import Layout from "./components/layouts/Layout";
 import TripDetails from "./pages/TripDetails";
 import MyTrips from "./pages/myTrips/TripPage";
+import TripInfo from "./pages/TripInfo";
 import Complaint from "./pages/SendComplaint";
 import { ThemeProvider } from "./context/ThemeProvider";
 import AuthLayout from "./components/layouts/AuthLayout";
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/vrplayer" element={<VrPlayer />} />
                 <Route path="/payment" element={<PaymentPage />} />
                 <Route path="/mytrips" element={<MyTrips />} />
+                <Route path="/tripinfo/:id" element={<TripInfo />} />
                 <Route path="/complaint" element={<Complaint />} />
               </Route>
               <Route path="/" element={<AuthLayout />}>
