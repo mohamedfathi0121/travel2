@@ -14,11 +14,11 @@ import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
 import VrPlayer from "./components/TripDeatailsComponents/VrPlayer";
 import { AuthProvider } from "./context/AuthContext";
+import AllTrips from "./pages/AllTrips";
 function App() {
   return (
     <>
       <AuthProvider>
-        {" "}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -28,11 +28,11 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/vrplayer" element={<VrPlayer />} />
               <Route path="/payment" element={<PaymentPage />} />
+              <Route path="/trips" element={<AllTrips />} />
               <Route path="/mytrips" element={<MyTrips />} />
               <Route path="/complaint" element={<Complaint />} />
+              <Route path="/review" element={<TripInfo />} />
             </Route>
-            <Route path="/" element={<AuthLayout />}></Route>
-            <Route path="/review" element={<TripInfo />} />
             <Route path="*" element={<h1>hello login</h1>} />
           </Routes>
         </BrowserRouter>
@@ -72,33 +72,7 @@ function App() {
           },
         }}
       />
-      <ThemeProvider>
-        <AuthProvider>
-          {" "}
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<LandingPage />} />
-                <Route
-                  path="/trip-details/:tripId/"
-                  element={<TripDetails />}
-                />
-                <Route path="/vrplayer" element={<VrPlayer />} />
-                <Route path="/payment" element={<PaymentPage />} />
-                <Route path="/mytrips" element={<MyTrips />} />
-                <Route path="/tripinfo/:id" element={<TripInfo />} />
-                <Route path="/complaint" element={<Complaint />} />
-              </Route>
-              <Route path="/" element={<AuthLayout />}>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-              </Route>
-              <Route path="*" element={<h1>hello login</h1>} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </ThemeProvider>
-      <Toaster />
+      
     </>
   );
 }

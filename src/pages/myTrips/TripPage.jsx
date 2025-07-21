@@ -3,7 +3,6 @@ import { supabase } from "../../utils/supabaseClient";
 import TripTabs from "./TripTabs";
 import TripCard from "./TripCard";
 import { useNavigate } from "react-router-dom";
-import { id } from "zod/v4/locales";
 
 export default function TripPage() {
   const navigate = useNavigate();

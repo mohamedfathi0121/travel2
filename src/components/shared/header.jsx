@@ -63,6 +63,16 @@ export default function Header() {
                     isActive ? activeClassName : "hover:text-button-primary"
                   }
                 >
+                  Trips
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/mytrips"
+                  className={({ isActive }) =>
+                    isActive ? activeClassName : "hover:text-button-primary"
+                  }
+                >
                   My Trips
                 </NavLink>
               </li>
@@ -141,7 +151,7 @@ export default function Header() {
               </NavLink>
             </>
           )}
-     
+
           {!user && (
             <>
               <NavLink
@@ -165,7 +175,7 @@ export default function Header() {
           )}
 
           <ThemeSwitcher />
-               {user && (
+          {user && (
             <button
               onClick={() => {
                 signOut();

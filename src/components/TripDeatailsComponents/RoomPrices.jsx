@@ -16,7 +16,7 @@ export default function RoomPrices({ roomPrices }) {
             <th className="p-3 font-semibold rounded-tr-2xl">Triple Room</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody  className="bg-background ">
           <tr>
             <td className="p-3 border-b border-gray-200 dark:border-gray-700">
               {roomPrices.startDate}

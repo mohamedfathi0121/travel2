@@ -12,25 +12,12 @@ export default function TripCard({
       <div className="flex-1 flex flex-col items-start">
         <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
         <p className="text-sm text-text-secondary mb-3">{date}</p>
-
-        {showReviewButton ? (
-          <button
-            onClick={onReviewClick}
-            className="inline-flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-colors duration-200"
-          >
-            Review{" "}
-            <span role="img" aria-label="star">
-              ⭐
-            </span>
-          </button>
-        ) : (
-          <button className="inline-flex items-center gap-1 bg-text-primary hover:bg-btn-primary-hover text-background px-4 py-1.5 rounded-md text-sm font-medium transition-colors duration-200">
-            Pay Now{" "}
-            <span role="img" aria-label="card">
-              💳
-            </span>
-          </button>
-        )}
+        <button className="inline-flex items-center gap-1 bg-button-primary hover:bg-button-primary-hover hover:shadow-md  shadow-text-hard-secondary  text-button-text px-4 py-1.5 rounded-md text-sm font-medium transition-colors duration-200">
+          Pay Now
+          <span role="img" aria-label="card">
+            💳
+          </span>
+        </button>
       </div>
 
       <img
