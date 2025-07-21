@@ -96,7 +96,7 @@ export default function TripDetails() {
   }, [tripId]);
 
 const handleBooking = async () => {
-  const userId = "1a0ff618-498e-4b3a-82bc-b9944b1f1f49"; // مؤقتًا
+  const userId = "a6092e3b-e4c0-46d3-a696-029fc032daa4"; // مؤقتًا
   console.log("📦 Booking Info:", bookingInfo);
 console.log("📦 scheduleId:", scheduleId);
 console.log("📦 tripId:", tripId);
