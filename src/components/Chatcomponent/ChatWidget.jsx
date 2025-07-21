@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { FaComments, FaTimes } from "react-icons/fa";
+import { FaComments, FaTimes, FaUser } from "react-icons/fa";
 import dayjs from "dayjs";
+
+
+
+
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
