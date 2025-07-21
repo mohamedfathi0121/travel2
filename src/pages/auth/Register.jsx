@@ -22,7 +22,6 @@ export default function RegisterPage() {
             case 2:
                 return <Step2 nextStep={nextStep} prevStep={prevStep} updateFormData={updateFormData} />;
             case 3:
-                // Pass the combined data to the final step
                 return <Step3 prevStep={prevStep} formData={formData} />;
             default:
                 return <Step1 nextStep={nextStep} updateFormData={updateFormData} />;
@@ -30,12 +29,19 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="bg-white min-h-screen flex flex-col font-sans">
+        <div className="bg-background min-h-screen flex flex-col font-sans">
             <main className="flex-grow flex items-center justify-center">
                 <div className="w-full max-w-lg px-4 sm:px-6 lg:px-8 py-12">
-                    <p className="text-sm font-medium text-gray-500 mb-2">Step {step} of 3</p>
+                    {/* Step Counter */}
+                    <p className="text-sm font-medium text-text-secondary mb-2 text-center">
+                        Step {step} of 3
+                    </p>
+
+                    {/* Progress Bar */}
                     <ProgressBar currentStep={step} totalSteps={3} />
-                    <div className="mt-8">
+
+                    {/* Form Steps */}
+                    <div className="mt-8 p-8 rounded-2xl shadow-md shadow-lg shadow-text-hard-secondary">
                         {renderStep()}
                     </div>
                 </div>

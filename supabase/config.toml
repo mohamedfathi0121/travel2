@@ -325,3 +325,16 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 entrypoint = "./functions/user-register/index.js"
 verify_jwt = false
 
+
+[functions.send-user-message]
+entrypoint = "./functions/send-user-message/index.js"
+verify_jwt = false
+
+[functions.send-admin-reply]
+entrypoint = "./functions/send-admin-reply/index.js"
+verify_jwt = false
+
+
+[functions.auto-status-update]
+entrypoint = "./functions/auto-status-update/index.js"
+verify_jwt = false
