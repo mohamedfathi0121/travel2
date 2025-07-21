@@ -10,6 +10,7 @@ import Layout from "./components/layouts/Layout";
 >>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
 import TripDetails from "./pages/TripDetails";
 import MyTrips from "./pages/myTrips/TripPage";
+import TripInfo from "./pages/TripInfo";
 import Complaint from "./pages/SendComplaint";
 import { ThemeProvider } from "./context/ThemeProvider";
 <<<<<<< HEAD
@@ -57,6 +58,7 @@ function App() {
                 <Route path="/vrplayer" element={<VrPlayer />} />
                 <Route path="/payment" element={<PaymentPage />} />
                 <Route path="/mytrips" element={<MyTrips />} />
+                <Route path="/tripinfo/:id" element={<TripInfo />} />
                 <Route path="/complaint" element={<Complaint />} />
               </Route>
               <Route path="/" element={<AuthLayout />}>
