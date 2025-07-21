@@ -1,7 +1,10 @@
+<<<<<<< HEAD
+=======
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../utils/supabaseClient";
 
+>>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
 import StatsSection from "../components/TripDeatailsComponents/StatsSection";
 import TripName from "../components/TripDeatailsComponents/TripName";
 import TripVRVideo from "../components/TripDeatailsComponents/VrPlayer";
@@ -12,10 +15,13 @@ import NotIncludedItems from "../components/TripDeatailsComponents/NotIncludedIt
 import RoomPrices from "../components/TripDeatailsComponents/RoomPrices";
 import HotelNotes from "../components/TripDeatailsComponents/HotelNotes";
 import HotelLocation from "../components/TripDeatailsComponents/HotelLocation";
+<<<<<<< HEAD
+=======
 import ReviewSection from "../components/TripDeatailsComponents/Reviews";
 import InquiryFormSection from "../components/TripDeatailsComponents/InquiryForm";
 import TripDetailsSkeleton from "../components/skeleton/TripDetailsSkeleton";
 import VrCard from "../components/TripDeatailsComponents/VrCard";
+>>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
 
 export default function TripDetails() {
   const { tripId } = useParams();
@@ -125,6 +131,37 @@ export default function TripDetails() {
   if (!tripData) return <div className="p-6 text-center text-gray-500 text-lg">لا توجد بيانات للرحلة.</div>;
 
   return (
+<<<<<<< HEAD
+    <>
+      {/* <Helmet>
+        <title>تفاصيل الرحله </title>
+        <meta name="description" content="اكتشف تفاصيل الرحله، الإقامة، الأسعار، والمميزات الخاصة بالفندق." />
+        <meta property="og:title" content="تفاصيل الرحلة - شرم الشيخ" />
+        <meta property="og:description" content="أفضل عروض الرحلات والفنادق في شرم الشيخ." />
+      </Helmet> */}
+      <div className="p-4 space-y-6">
+        <StatsSection />
+        <HotelName />
+        <HotelVRVideo />
+        <HotelGallery />
+        <HotelFeatures />
+        <IncludedItems />
+        <NotIncludedItems />
+        <RoomPrices />
+        <HotelNotes />
+        <HotelLocation />
+
+        <button
+          className="fixed bottom-4 right-4 bg-header-background text-text-primary px-6 py-3 rounded-full shadow-lg hover:bg-btn-primary-hover transition-all text-lg z-50"
+          onClick={() => {
+            window.location.href = "/booking"; // مثال
+          }}
+        >
+          احجز الآن
+        </button>
+      </div>
+    </>
+=======
     <div className="min-h-screen bg-background text-black p-4 space-y-6">
       <StatsSection statsData={statsData} />
       <TripName
@@ -159,5 +196,6 @@ export default function TripDetails() {
         Book Now
       </button>
     </div>
+>>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
   );
 }
