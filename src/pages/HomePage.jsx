@@ -77,8 +77,8 @@ const HomePage = () => {
     <div
       className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-background text-text-primary"
     >
-      <div className="rounded shadow md:col-span-1">
-=======
+      <di className="rounded shadow md:col-span-1 bg-background">
+        <SidebarFilters onFilter={handleFilter} />
 
   const handleFilter = ({ destination, cost, date }) => {
     const filtered = allTrips.filter((trip) => {
@@ -94,13 +94,13 @@ const HomePage = () => {
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-background text-text-primary">
       <div className="rounded shadow md:col-span-1 bg-background">
->>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
+
         <SidebarFilters onFilter={handleFilter} />
       </div>
 
       <div className="md:col-span-3">
         <h1 className="text-2xl font-bold mb-4">Trips</h1>
-<<<<<<< HEAD
+
 
         <div className="flex justify-end mb-4">
           <label className="mr-2 text-sm">Trips per page:</label>
@@ -123,11 +123,11 @@ const HomePage = () => {
           <TripCard key={trip.id} trip={trip} />
         ))}
         {renderPagination()}
-=======
+
         {filteredTrips.map((trip) => (
           <TripCard key={trip.id} trip={trip} />
         ))}
->>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
+
       </div>
     </div>
   );
