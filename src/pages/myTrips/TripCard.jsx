@@ -1,4 +1,12 @@
-export default function TripCard({ title, date, image }) {
+export default function TripCard({
+  title = "Untitled Trip",
+  date = "Unknown Date",
+  image,
+  showReviewButton = false,
+  onReviewClick,
+}) {
+  const defaultImage = "../../assets/a.jpg";
+
   return (
     <div className="flex flex-col sm:flex-row items-start justify-between gap-4 sm:gap-6 mb-6 p-4 bg-background rounded-xl shadow-sm shadow-text-hard-secondary hover:shadow-md transition-shadow duration-200 w-full">
       <div className="flex-1 flex flex-col items-start">
@@ -13,9 +21,13 @@ export default function TripCard({ title, date, image }) {
       </div>
 
       <img
-        src={image}
-        alt={title}
+        src={image || defaultImage}
+        alt={title || "Trip Image"}
         className="w-full sm:w-60 h-32 sm:h-40 object-cover rounded-lg shadow"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = defaultImage;
+        }}
       />
     </div>
   );

@@ -2,7 +2,7 @@ const tabs = ["Approved", "Completed", "Cancelled", "Not Approved"];
 
 export default function TripTabs({ currentTab, setCurrentTab }) {
   return (
-    <div className="flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-4 border-b mb-6">
+    <div className="flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-4 border-b mb-6 bg-background">
       {tabs.map((tab) => {
         const isActive = currentTab === tab;
         return (

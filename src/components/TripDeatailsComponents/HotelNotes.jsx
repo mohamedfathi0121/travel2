@@ -1,6 +1,10 @@
 export default function HotelNotes() {
   return (
+<<<<<<< HEAD
+    <section className="bg-background p-4 rounded-lg shadow-md mb-4 text-left">
+=======
     <section className="bg-background p-4 rounded-lg shadow-md mb-4 text-left border border-gray-200 dark:border-blue-900 dark:shadow-[0_4px_32px_0_rgba(0,40,120,0.25)]">
+>>>>>>> 8d6b443a2d2354c2700dc0d259df5f3510edf52c
       <h2 className="text-xl font-semibold  mb-3  text-text-primary">Notes:</h2>
       <h3 className="text-text-primary font-bold mb-2">Children Policy:</h3>
       <ul className="list-disc pl-6 space-y-1 text-text-hard-secondary">

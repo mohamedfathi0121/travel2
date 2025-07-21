@@ -1,165 +1,376 @@
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { trips } from "../data/trips";
-import { FaStar } from "react-icons/fa";
+import { supabase } from "../utils/supabaseClient";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
 
-const TripInfo = () => {
-  const { id } = useParams();
+export default function TripInfo() {
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const trip = trips.find((t) => t.id === Number(id));
+  const { id: tripScheduleId } = useParams();
+  const [tripInfo, setTripInfo] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
 
-  const [reviews, setReviews] = useState([
-    { name: "Ali", rating: 5, comment: "Amazing trip!" },
-    { name: "Sara", rating: 4, comment: "Very good but expensive." },
-    { name: "John", rating: 3, comment: "Average experience." },
-  ]);
-
-  const { register, handleSubmit, reset } = useForm();
-
-  const onSubmit = (data) => {
-    const newReview = {
-      name: data.name,
-      rating: Number(data.rating),
-      comment: data.comment,
-    };
-    setReviews((prev) => [...prev, newReview]);
-    reset();
-  };
-
-  if (!trip) return <p className="p-6 text-red-500">Trip not found.</p>;
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editingReviewText, setEditingReviewText] = useState("");
+  const [editingRating, setEditingRating] = useState(0);
 
   const totalReviews = reviews.length;
-  const averageRating = (
-    reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
-  ).toFixed(1);
+  const averageRating = totalReviews
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews).toFixed(1)
+    : 0;
 
-  const ratingsData = [5, 4, 3, 2, 1].map((star) => {
-    const count = reviews.filter((r) => r.rating === star).length;
-    const percent = totalReviews === 0 ? 0 : ((count / totalReviews) * 100).toFixed(0);
-    return { stars: star, percent };
-  });
+  const ratingCounts = [1, 2, 3, 4, 5].reduce((acc, star) => {
+    acc[star] = reviews.filter((r) => r.rating === star).length;
+    return acc;
+  }, {});
+
+  useEffect(() => {
+    const fetchTripInfoAndReviews = async () => {
+      const { data, error } = await supabase
+        .from("trip_schedules")
+        .select(
+          `
+          id,
+          start_date,
+          end_date,
+          status,
+          location_url,
+          base_trips (
+            id,
+            title,
+            description,
+            photo_urls,
+            city
+          )
+        `
+        )
+        .eq("id", tripScheduleId)
+        .single();
+
+      if (error) {
+        console.error("Trip fetch error:", error.message);
+      } else {
+        setTripInfo(data);
+
+        if (data?.base_trips?.id) {
+          const { data: fetchedReviews, error: reviewsError } = await supabase
+            .from("reviews")
+            .select("id, user_id, rating, review_text, created_at")
+            .eq("base_trip_id", data.base_trips.id);
+
+          if (reviewsError) {
+            console.error("Review fetch error:", reviewsError.message);
+          } else {
+            const sortedReviews = [...fetchedReviews];
+            if (user?.id) {
+              sortedReviews.sort((a, b) => {
+                if (a.user_id === user.id) return -1;
+                if (b.user_id === user.id) return 1;
+                return new Date(b.created_at) - new Date(a.created_at);
+              });
+            }
+            setReviews(sortedReviews);
+          }
+        }
+      }
+    };
+
+    fetchTripInfoAndReviews();
+  }, [tripScheduleId, user?.id]);
+
+  const handleSubmit = async () => {
+    if (selectedRating === 0) {
+      toast.error("Please select a rating.");
+      return;
+    }
+
+    const userId = user?.id;
+    if (!userId) {
+      toast.error("You must be logged in to submit a review.");
+      return;
+    }
+
+    const { error } = await supabase.from("reviews").insert({
+      base_trip_id: tripInfo.base_trips.id,
+      rating: selectedRating,
+      review_text: reviewText,
+      user_id: userId,
+    });
+
+    if (error) {
+      toast.error("Error submitting review: " + error.message);
+    } else {
+      toast.success("Review submitted successfully!");
+      setSelectedRating(0);
+      setReviewText("");
+      fetchUpdatedReviews();
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    const { error } = await supabase
+      .from("reviews")
+      .delete()
+      .eq("id", reviewId);
+    if (error) {
+      toast.error("Failed to delete review: " + error.message);
+    } else {
+      toast.success("Review deleted.");
+      fetchUpdatedReviews();
+    }
+  };
+
+  const handleUpdateReview = async (reviewId, newText, newRating) => {
+    const { error } = await supabase
+      .from("reviews")
+      .update({ review_text: newText, rating: newRating })
+      .eq("id", reviewId);
+
+    if (error) {
+      toast.error("Failed to update review: " + error.message);
+    } else {
+      toast.success("Review updated.");
+      setEditingReviewId(null);
+      fetchUpdatedReviews();
+    }
+  };
+
+  const fetchUpdatedReviews = async () => {
+    const { data } = await supabase
+      .from("reviews")
+      .select("id, user_id, rating, review_text, created_at")
+      .eq("base_trip_id", tripInfo.base_trips.id);
+
+    const sortedReviews = [...data];
+    if (user?.id) {
+      sortedReviews.sort((a, b) => {
+        if (a.user_id === user.id) return -1;
+        if (b.user_id === user.id) return 1;
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+    }
+
+    setReviews(sortedReviews);
+  };
+
+  if (!tripInfo) return <div className="text-center p-4">Loading...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 text-text-primary">
-      <button
-        onClick={() => navigate(-1)}
-        className="underline mb-4 text-sm text-btn-primary"
-      >
-        ← Back
-      </button>
-
-      <h1 className="text-2xl font-bold mb-2">{trip.title}</h1>
-      <img
-        src={trip.image}
-        alt={trip.title}
-        className="w-full h-64 object-cover rounded mb-4"
-      />
-
-      <p>{trip.description}</p>
-      <p className="mt-4"><strong>Destination:</strong> {trip.destination}</p>
-      <p><strong>Date:</strong> {trip.date}</p>
-      <p><strong>Price:</strong> ${trip.price}</p>
-
-      <hr className="my-6" />
-
-      {/* Rating Summary */}
-      <div className="p-6 rounded shadow mb-10 bg-background">
-        <h2 className="text-xl font-semibold mb-4">How was your trip?</h2>
-        <div className="flex items-start gap-6">
-          {/* Average Rating */}
-          <div className="text-center w-32">
-            <p className="text-4xl font-bold">{averageRating}</p>
-            <div className="flex justify-center text-yellow-500 mt-1">
-              {Array.from({ length: 5 }, (_, i) => (
-                <FaStar key={i} className={i < Math.round(averageRating) ? "" : "text-gray-300"} />
-              ))}
-            </div>
-            <p className="text-sm mt-1 text-text-secondary">
-              {totalReviews} reviews
+    <div className="min-h-screen w-[90%] max-w-screen-xl mx-auto bg-background text-text-primary">
+      <div className="w-full px-4 py-6 bg-background">
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate("/mytrips")}
+            className="px-4 py-2 bg-button-primary text-white rounded hover:bg-button-primary-hover transition h-[70px] w-[70px]"
+          >
+            ← Back
+          </button>
+          <div>
+            <h2 className="text-2xl font-bold mb-2 text-text-primary">
+              {tripInfo.base_trips.title}
+            </h2>
+            <p className="text-text-secondary mb-4">
+              {tripInfo.base_trips.description}
             </p>
           </div>
+        </div>
 
-          {/* Rating Breakdown */}
-          <div className="flex-1 space-y-2">
-            {ratingsData.map((r) => (
-              <div key={r.stars} className="flex items-center gap-2">
-                <span className="w-6">{r.stars}</span>
-                <div className="flex-1 h-3 rounded bg-gray-300">
-                  <div
-                    className="h-3 rounded bg-btn-primary"
-                    style={{ width: `${r.percent}%` }}
-                  />
-                </div>
-                <span className="w-10 text-right text-sm text-text-secondary">
-                  {r.percent}%
-                </span>
+        {/* التقييم العام */}
+        <div className="bg-background rounded-md shadow p-6 mb-6 text-center">
+          <h3 className="text-xl font-semibold mb-2 text-text-primary ">
+            How was {tripInfo.base_trips.title}?
+          </h3>
+          <div className="flex justify-center gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-text-primary">
+                {averageRating}
               </div>
-            ))}
+              <div className="text-yellow-400 text-xl">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i}>
+                    {i < Math.round(averageRating) ? "★" : "☆"}
+                  </span>
+                ))}
+              </div>
+              <div className="text-sm text-text-primary">
+                {totalReviews} reviews
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center w-full max-w-md">
+              {[5, 4, 3, 2, 1].map((star) => {
+                const count = ratingCounts[star] || 0;
+                const percent = totalReviews
+                  ? ((count / totalReviews) * 100).toFixed(0)
+                  : 0;
+                return (
+                  <div key={star} className="flex items-center gap-2 mb-1">
+                    <span className="w-4 text-sm text-text-primary">
+                      {star}
+                    </span>
+                    <div className="w-full bg-text-hard-secondary h-3 rounded">
+                      <div
+                        className="bg-button-primary h-3 rounded"
+                        style={{ width: `${percent}%` }}
+                      ></div>
+                    </div>
+                    <span className="w-8 text-sm text-text-primary">
+                      {percent}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* All Reviews */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold mb-4">All Reviews</h2>
-        <div className="space-y-4">
+        {/* عرض المراجعات */}
+        <div className="text-left">
+          <h3 className="text-lg font-semibold mb-4 text-text-primary">
+            Other Reviews
+          </h3>
           {reviews.length > 0 ? (
-            reviews.map((review, index) => (
-              <div
-                key={index}
-                className="border p-4 rounded shadow-sm bg-background"
-              >
-                <p className="font-bold">
-                  {review.name} ⭐ {review.rating}/5
-                </p>
-                <p className="text-text-secondary">{review.comment}</p>
-              </div>
-            ))
+            <div className="max-h-[200px] overflow-y-auto bg-background space-y-4 pr-2">
+              {reviews.map((r) => {
+                const isCurrentUser = user?.id === r.user_id;
+                const isEditing = editingReviewId === r.id;
+                return (
+                  <div
+                    key={r.id}
+                    className="p-4 border rounded-md shadow-sm bg-background"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center space-x-2">
+                        <div className="text-yellow-400">
+                          {[...Array(5)].map((_, i) => (
+                            <span key={i}>
+                              {i < r.rating ? (
+                                "★"
+                              ) : (
+                                <span className="text-text-secondary">★</span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                        <span className="text-sm text-text-secondary">
+                          {new Date(r.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      {isCurrentUser && (
+                        <div className="space-x-2">
+                          <button
+                            onClick={() => {
+                              setEditingReviewId(r.id);
+                              setEditingReviewText(r.review_text);
+                              setEditingRating(r.rating);
+                            }}
+                            className="text-blue-600 hover:underline text-sm"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteReview(r.id)}
+                            className="text-red-600 hover:underline text-sm"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {isEditing ? (
+                      <div className="space-y-2 mt-2">
+                        <div className="flex gap-1 justify-center">
+                          {[...Array(5)].map((_, i) => (
+                            <span
+                              key={i}
+                              onClick={() => setEditingRating(i + 1)}
+                              className={`cursor-pointer text-xl ${
+                                i < editingRating
+                                  ? "text-yellow-400"
+                                  : "text-text-secondary"
+                              }`}
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                        <textarea
+                          value={editingReviewText}
+                          onChange={(e) => setEditingReviewText(e.target.value)}
+                          className="w-full p-2 border rounded resize-none text-sm bg-background text-text-primary"
+                        />
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => setEditingReviewId(null)}
+                            className="text-sm text-gray-500"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleUpdateReview(
+                                r.id,
+                                editingReviewText,
+                                editingRating
+                              )
+                            }
+                            className="text-sm text-white bg-button-primary px-4 py-1 rounded"
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-text-secondary mt-1">
+                        {r.review_text}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           ) : (
-            <p className="text-text-secondary">No reviews yet.</p>
+            <p className="text-sm text-text-secondary">No reviews yet.</p>
           )}
         </div>
+
+        <hr className="my-8 text-text-primary" />
+
+        {/* كتابة تقييم */}
+        <div className="text-center mb-6">
+          <div className="text-lg font-semibold mb-2 text-text-primary">
+            Rate this trip
+          </div>
+          <div className="flex justify-center space-x-1">
+            {[...Array(5)].map((_, i) => (
+              <span
+                key={i}
+                onClick={() => setSelectedRating(i + 1)}
+                className={`text-3xl cursor-pointer transition ${
+                  i < selectedRating ? "text-yellow-400" : "text-text-secondary"
+                }`}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+          <textarea
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            placeholder="Write your review here..."
+            className="mt-4 w-full border rounded-md p-2 resize-none bg-background text-text-primary"
+          />
+          <button
+            onClick={handleSubmit}
+            className="mt-4 px-6 py-2 bg-button-primary text-white rounded hover:bg-button-primary-hover transition"
+          >
+            Submit Review
+          </button>
+        </div>
       </div>
-
-      {/* Add Review */}
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 rounded shadow p-6 bg-background"
-      >
-        <h3 className="text-lg font-semibold mb-2">Leave a Review</h3>
-
-        <input
-          {...register("name", { required: true })}
-          placeholder="Your Name"
-          className="w-full border p-2 rounded bg-input text-text-primary"
-        />
-
-        <select
-          {...register("rating", { required: true })}
-          className="w-full border p-2 rounded bg-input text-text-primary"
-        >
-          <option value="">Select Rating</option>
-          {[5, 4, 3, 2, 1].map((star) => (
-            <option key={star} value={star}>{star} Star</option>
-          ))}
-        </select>
-
-        <textarea
-          {...register("comment", { required: true })}
-          placeholder="Your Comment"
-          className="w-full border p-2 rounded bg-input text-text-primary"
-        />
-
-        <button
-          type="submit"
-          className="text-white px-4 py-2 rounded bg-btn-primary hover:bg-btn-primary-hover transition"
-        >
-          Submit Review
-        </button>
-      </form>
     </div>
   );
-};
-
-export default TripInfo;
+}
