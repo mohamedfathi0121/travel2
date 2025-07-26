@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import  supabase  from "../utils/supabase";
+import supabase from "../utils/supabase";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../hooks/useAuth";
 
@@ -10,6 +10,7 @@ export default function TripInfo() {
   const { tripId: tripScheduleId } = useParams();
   const [tripInfo, setTripInfo] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [userReview, setUserReview] = useState(null);
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [editingReviewId, setEditingReviewId] = useState(null);
@@ -25,7 +26,7 @@ export default function TripInfo() {
     acc[star] = reviews.filter((r) => r.rating === star).length;
     return acc;
   }, {});
-console.log("📦 tripInfo:", tripScheduleId );
+
   useEffect(() => {
     const fetchTripInfoAndReviews = async () => {
       const { data, error } = await supabase
@@ -47,7 +48,7 @@ console.log("📦 tripInfo:", tripScheduleId );
         `
         )
         .eq("id", tripScheduleId)
-        .maybeSingle(); // ✅ بدل .single() أو بدونها
+        .maybeSingle();
 
       if (error) {
         console.error("Trip fetch error:", error.message);
@@ -55,26 +56,8 @@ console.log("📦 tripInfo:", tripScheduleId );
         console.warn("No trip found for this ID:", tripScheduleId);
       } else {
         setTripInfo(data);
-
         if (data?.base_trips?.id) {
-          const { data: fetchedReviews, error: reviewsError } = await supabase
-            .from("reviews")
-            .select("id, user_id, rating, review_text, created_at")
-            .eq("base_trip_id", data.base_trips.id);
-
-          if (reviewsError) {
-            console.error("Review fetch error:", reviewsError.message);
-          } else {
-            const sortedReviews = [...fetchedReviews];
-            if (user?.id) {
-              sortedReviews.sort((a, b) => {
-                if (a.user_id === user.id) return -1;
-                if (b.user_id === user.id) return 1;
-                return new Date(b.created_at) - new Date(a.created_at);
-              });
-            }
-            setReviews(sortedReviews);
-          }
+          await fetchUpdatedReviews(data.base_trips.id);
         }
       }
     };
@@ -82,11 +65,11 @@ console.log("📦 tripInfo:", tripScheduleId );
     fetchTripInfoAndReviews();
   }, [tripScheduleId, user?.id]);
 
-  const fetchUpdatedReviews = async () => {
+  const fetchUpdatedReviews = async (baseTripId) => {
     const { data } = await supabase
       .from("reviews")
       .select("id, user_id, rating, review_text, created_at")
-      .eq("base_trip_id", tripInfo.base_trips.id);
+      .eq("base_trip_id", baseTripId);
 
     const sortedReviews = [...data];
     if (user?.id) {
@@ -98,6 +81,8 @@ console.log("📦 tripInfo:", tripScheduleId );
     }
 
     setReviews(sortedReviews);
+    const currentUserReview = sortedReviews.find((r) => r.user_id === user?.id);
+    setUserReview(currentUserReview || null);
   };
 
   const handleSubmit = async () => {
@@ -109,6 +94,11 @@ console.log("📦 tripInfo:", tripScheduleId );
     const userId = user?.id;
     if (!userId) {
       toast.error("You must be logged in to submit a review.");
+      return;
+    }
+
+    if (userReview) {
+      toast.error("You have already submitted a review for this trip.");
       return;
     }
 
@@ -125,7 +115,7 @@ console.log("📦 tripInfo:", tripScheduleId );
       toast.success("Review submitted successfully!");
       setSelectedRating(0);
       setReviewText("");
-      fetchUpdatedReviews();
+      await fetchUpdatedReviews(tripInfo.base_trips.id);
     }
   };
 
@@ -138,7 +128,7 @@ console.log("📦 tripInfo:", tripScheduleId );
       toast.error("Failed to delete review: " + error.message);
     } else {
       toast.success("Review deleted.");
-      fetchUpdatedReviews();
+      await fetchUpdatedReviews(tripInfo.base_trips.id);
     }
   };
 
@@ -153,7 +143,7 @@ console.log("📦 tripInfo:", tripScheduleId );
     } else {
       toast.success("Review updated.");
       setEditingReviewId(null);
-      fetchUpdatedReviews();
+      await fetchUpdatedReviews(tripInfo.base_trips.id);
     }
   };
 
@@ -342,34 +332,47 @@ console.log("📦 tripInfo:", tripScheduleId );
 
         {/* كتابة تقييم */}
         <div className="text-center mb-6">
-          <div className="text-lg font-semibold mb-2 text-text-primary">
-            Rate this trip
-          </div>
-          <div className="flex justify-center space-x-1">
-            {[...Array(5)].map((_, i) => (
-              <span
-                key={i}
-                onClick={() => setSelectedRating(i + 1)}
-                className={`text-3xl cursor-pointer transition ${
-                  i < selectedRating ? "text-yellow-400" : "text-text-secondary"
-                }`}
+          {userReview ? (
+            <div className="text-text-secondary text-sm">
+              <p>You have already reviewed this trip.</p>
+              <p className="mt-2">
+                You can edit or delete your review above 👆
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="text-lg font-semibold mb-2 text-text-primary">
+                Rate this trip
+              </div>
+              <div className="flex justify-center space-x-1">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    onClick={() => setSelectedRating(i + 1)}
+                    className={`text-3xl cursor-pointer transition ${
+                      i < selectedRating
+                        ? "text-yellow-400"
+                        : "text-text-secondary"
+                    }`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Write your review here..."
+                className="mt-4 w-full border rounded-md p-2 resize-none bg-background text-text-primary"
+              />
+              <button
+                onClick={handleSubmit}
+                className="mt-4 px-6 py-2 bg-button-primary text-white rounded hover:bg-button-primary-hover transition"
               >
-                ★
-              </span>
-            ))}
-          </div>
-          <textarea
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            placeholder="Write your review here..."
-            className="mt-4 w-full border rounded-md p-2 resize-none bg-background text-text-primary"
-          />
-          <button
-            onClick={handleSubmit}
-            className="mt-4 px-6 py-2 bg-button-primary text-white rounded hover:bg-button-primary-hover transition"
-          >
-            Submit Review
-          </button>
+                Submit Review
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../utils/supabaseClient";
+import supabase from "../utils/supabase";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const updateTickets = async () => {
-      const bookedCount = parseInt(localStorage.getItem("booking_people_count") || "0");
+      const bookedCount = parseInt(
+        localStorage.getItem("booking_people_count") || "0"
+      );
       const scheduleId = localStorage.getItem("schedule_id");
 
       if (!scheduleId || !bookedCount) return;

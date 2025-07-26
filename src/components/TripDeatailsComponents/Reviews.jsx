@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../utils/supabaseClient";
 import { FaStar } from "react-icons/fa";
+import supabase from "../../utils/supabase";
 
 // ⭐ مكون النجوم
 function StarRating({ rating, max = 5 }) {
@@ -27,11 +27,18 @@ function StarRating({ rating, max = 5 }) {
 function ReviewBar({ stars, percent }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="w-4 text-sm text-gray-700 dark:text-gray-300">{stars}</span>
+      <span className="w-4 text-sm text-gray-700 dark:text-gray-300">
+        {stars}
+      </span>
       <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
-        <div className="bg-blue-500 h-full" style={{ width: `${percent}%` }}></div>
+        <div
+          className="bg-blue-500 h-full"
+          style={{ width: `${percent}%` }}
+        ></div>
       </div>
-      <span className="w-10 text-sm text-gray-500 dark:text-gray-400 text-right">{percent}%</span>
+      <span className="w-10 text-sm text-gray-500 dark:text-gray-400 text-right">
+        {percent}%
+      </span>
     </div>
   );
 }
@@ -81,15 +88,23 @@ export default function ReviewSection() {
       <div className="flex flex-col sm:flex-row gap-6">
         {/* ⭐ متوسط التقييم */}
         <div className="text-center sm:w-1/3">
-          <p className="text-4xl font-bold text-text-primary">{average_rating}</p>
+          <p className="text-4xl font-bold text-text-primary">
+            {average_rating}
+          </p>
           <StarRating rating={average_rating} />
-          <p className="text-gray-500 dark:text-gray-400">{totalReviews} reviews</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            {totalReviews} reviews
+          </p>
         </div>
 
         {/* 📊 تقييم حسب كل نجمة */}
         <div className="flex-1 space-y-2">
           {reviewData.map((item) => (
-            <ReviewBar key={item.stars} stars={item.stars} percent={item.percent} />
+            <ReviewBar
+              key={item.stars}
+              stars={item.stars}
+              percent={item.percent}
+            />
           ))}
         </div>
       </div>
