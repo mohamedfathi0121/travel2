@@ -34,14 +34,10 @@ export default function LandingPage() {
               Discover unique trips & book your perfect getaway today.
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center">
-              <input
-                type="text"
-                placeholder="Where to?"
-                className="px-4 py-2 w-60 md:w-72 rounded shadow focus:outline-none text-sm mb-2 sm:mb-0 bg-white bg-opacity-90 text-gray-900 placeholder-gray-600"
-              />
-              <button className="sm:ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
-                Search
-              </button>
+            
+              <Link to="/trips" className="sm:ml-2 px-4 py-2 bg-button-primary text-button-text rounded hover:bg-button-primary-hover text-sm">
+                See All Trips
+              </Link>
             </div>
           </div>
         </div>

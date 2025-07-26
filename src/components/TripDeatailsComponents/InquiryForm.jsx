@@ -126,6 +126,7 @@ export default function InquiryFormSection({ priceData, setBookingInfo }) {
         <div className="mt-8 text-xl font-bold text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded-lg py-4 shadow text-center">
           Total Cost: EGP {totalCost.toLocaleString()}
         </div>
+        
       </form>
     </section>
   );

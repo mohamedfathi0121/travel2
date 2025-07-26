@@ -338,3 +338,9 @@ verify_jwt = false
 [functions.auto-status-update]
 entrypoint = "./functions/auto-status-update/index.js"
 verify_jwt = false
+
+[functions.send-complaint]
+entrypoint = "./functions/send-complaint/index.js"
+verify_jwt = false
+
+

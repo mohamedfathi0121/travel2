@@ -4,17 +4,18 @@ import LandingPage from "./pages/landing_page";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PaymentPage from "./pages/payment_page";
 import TripDetails from "./pages/TripDetails";
-import MyTrips from "./pages/myTrips/TripPage";
+import MyTrips from "./pages/TripPage";
 import TripInfo from "./pages/TripInfo";
-import Complaint from "./pages/SendComplaint";
-import { ThemeProvider } from "./context/ThemeProvider";
-import AuthLayout from "./components/layouts/AuthLayout";
 import Layout from "./components/layouts/Layout";
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
 import VrPlayer from "./components/TripDeatailsComponents/VrPlayer";
 import { AuthProvider } from "./context/AuthContext";
 import AllTrips from "./pages/AllTrips";
+import TripPage from "./pages/TripPage";
+import SendComplaint from "./pages/SendComplaint";
+import NotFound from "./pages/NotFound";
+import PaymentSuccess from "./pages/PaymentSuccess";
 function App() {
   return (
     <>
@@ -23,17 +24,18 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<LandingPage />} />
-              <Route path="/trip-details/:tripId/" element={<TripDetails />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/vrplayer" element={<VrPlayer />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/trips" element={<AllTrips />} />
-              <Route path="/mytrips" element={<MyTrips />} />
-              <Route path="/complaint" element={<Complaint />} />
-              <Route path="/review" element={<TripInfo />} />
+              <Route path="/trips/:tripId/" element={<TripDetails />} />
+              <Route path="/mytrips" element={<TripPage />} />
+              <Route path="/complaint" element={<SendComplaint />} />
+              <Route path="/payment-success" element={<PaymentSuccess/>}/>
+              <Route path="/review/:tripId" element={<TripInfo />} />
             </Route>
-            <Route path="*" element={<h1>hello login</h1>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
@@ -72,7 +74,6 @@ function App() {
           },
         }}
       />
-      
     </>
   );
 }

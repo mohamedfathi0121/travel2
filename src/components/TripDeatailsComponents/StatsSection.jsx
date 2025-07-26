@@ -7,18 +7,26 @@ export default function StatsSection({ statsData }) {
     );
   }
 
-  const totalTickets = statsData.available_tickets ?? 0;
-  const bookedTickets = 200 - totalTickets; // ممكن تتعدل لاحقاً لما نعمل جدول للحجوزات
-  const availableTickets = totalTickets-bookedTickets;
-  const lowestPrice = statsData.price?.price_triple ?? "Not Available";
-  const status = statsData.status === "completed" ? "❌ Completed" : "✅ Available";
+const totalTickets = statsData.available_tickets ?? 0; // ده التوتال الفعلي
+const bookedTickets = statsData.sold_tickits ?? 0;
+const reminderTickets = statsData.reminder_tickets ?? (totalTickets - bookedTickets); // ده التذاكر المتبقية
 
 
-  const stats = [
-    { title: "Total Tickets", value: totalTickets },
-    { title: "Booked Tickets", value: bookedTickets },
-    { title: "Available Tickets", value: availableTickets },
-  ];
+const lowestPrice = statsData.price?.price_triple ?? "Not Available";
+
+const status =
+  reminderTickets <= 0
+    ? "🚫 Full"
+    : statsData.status === "completed"
+    ? "❌ Completed"
+    : "✅ Available";
+
+const stats = [
+  { title: "Total Tickets", value: totalTickets },
+  { title: "Booked Tickets", value: bookedTickets },
+  { title: "Available Tickets", value: reminderTickets },
+];
+
 
   return (
     <div className="space-y-4 mb-4">

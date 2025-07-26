@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
-import TripTabs from "./TripTabs";
-import TripCard from "./TripCard";
-import { useNavigate } from "react-router-dom";
+import supabase from "../utils/supabase";
+import TripTabs from "../components/myTrips/TripTabs";
+import TripCard from "../components/myTrips/TripCard";
+import { useAuth } from "../hooks/useAuth";
 
 export default function TripPage() {
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [trips, setTrips] = useState([]);
-  const [currentTab, setCurrentTab] = useState("Approved");
+  const [currentTab, setCurrentTab] = useState("On Going");
 
   const formatDateTime = (dateStr) => {
     const date = new Date(dateStr);
@@ -26,46 +26,45 @@ export default function TripPage() {
 
   useEffect(() => {
     const fetchTrips = async () => {
-      const { data, error } = await supabase.from("trip_schedules").select(`
-        id,
-        start_date,
-        end_date,
-        status,
-        location_url,
-        base_trips (
+      if (!user?.id) return;
+
+      const { data: bookings, error } = await supabase
+        .from("bookings")
+        .select(
+          `
           id,
-          title,
-          description,
-          photo_urls,
-          city
+          trip_schedules (
+            id,
+            start_date,
+            end_date,
+            base_trips (
+              id,
+              title,
+              photo_urls
+            )
+          )
+        `
         )
-      `);
+        .eq("user_id", user.id);
+        console.log(user.id);
+        console.log(bookings);
 
       if (error) {
-        console.error("Error fetching trips:", error.message);
+        console.error("Error fetching bookings:", error.message);
         return;
       }
 
       const today = new Date();
+      today.setHours(0, 0, 0, 0); // ✅ Normalize to midnight
 
-      const mappedTrips = data.map((trip) => {
-        const start = new Date(trip.start_date);
-        const end = new Date(trip.end_date);
+      const mappedTrips = bookings.map((booking) => {
+        const trip = booking.trip_schedules;
+        const baseTrip = trip?.base_trips;
 
-        let status = "Not Approved";
+        const endDate = new Date(trip?.end_date);
+        endDate.setHours(0, 0, 0, 0); // ✅ Normalize
 
-        if (trip.status === "cancelled") {
-          status = "Cancelled";
-        } else if (
-          (trip.status === "open" || trip.status === "closed") &&
-          end < today
-        ) {
-          status = "Completed";
-        } else if (trip.status === "open" && start > today) {
-          status = "Approved";
-        } else if (trip.status === "full") {
-          status = "Not Approved";
-        }
+        const status = endDate < today ? "Completed" : "On Going";
 
         const startFormatted = formatDateTime(trip.start_date);
         const endFormatted = formatDateTime(trip.end_date);
@@ -73,9 +72,9 @@ export default function TripPage() {
         return {
           id: trip.id,
           status,
-          title: trip.base_trips?.title || "Untitled",
+          title: baseTrip?.title || "Untitled",
           date: `${startFormatted.date} at ${startFormatted.time}\n→ ${endFormatted.date} at ${endFormatted.time}`,
-          image: trip.base_trips?.photo_urls?.[0] || "/default-trip-image.jpg",
+          image: baseTrip?.photo_urls?.[0] || "/default-trip-image.jpg",
         };
       });
 
@@ -83,7 +82,7 @@ export default function TripPage() {
     };
 
     fetchTrips();
-  }, []);
+  }, [user?.id]);
 
   const filteredTrips = trips.filter((trip) => trip.status === currentTab);
 
@@ -92,7 +91,6 @@ export default function TripPage() {
       <h1 className="text-2xl font-bold mb-4 text-text-primary">My Trips</h1>
       <div className="p-4">
         <TripTabs currentTab={currentTab} setCurrentTab={setCurrentTab} />
-
         {filteredTrips.length > 0 ? (
           filteredTrips.map((trip) => (
             <TripCard
@@ -101,7 +99,8 @@ export default function TripPage() {
               date={trip.date}
               image={trip.image}
               showReviewButton={currentTab === "Completed"}
-              onReviewClick={() => navigate(`../TripInfo/${trip.id}`)}
+              id={trip.id}
+              
             />
           ))
         ) : (

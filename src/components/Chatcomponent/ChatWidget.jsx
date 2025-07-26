@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { FaComments, FaTimes } from "react-icons/fa";
+import { FaComments, FaTimes, FaUser } from "react-icons/fa";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import supabase from "../../utils/supabase";

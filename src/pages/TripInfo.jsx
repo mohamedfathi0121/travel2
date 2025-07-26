@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "../utils/supabaseClient";
+import  supabase  from "../utils/supabase";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../hooks/useAuth";
 
 export default function TripInfo() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { id: tripScheduleId } = useParams();
+  const { tripId: tripScheduleId } = useParams();
   const [tripInfo, setTripInfo] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
-
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editingReviewText, setEditingReviewText] = useState("");
   const [editingRating, setEditingRating] = useState(0);
@@ -26,7 +25,7 @@ export default function TripInfo() {
     acc[star] = reviews.filter((r) => r.rating === star).length;
     return acc;
   }, {});
-
+console.log("📦 tripInfo:", tripScheduleId );
   useEffect(() => {
     const fetchTripInfoAndReviews = async () => {
       const { data, error } = await supabase
@@ -48,10 +47,12 @@ export default function TripInfo() {
         `
         )
         .eq("id", tripScheduleId)
-        .single();
+        .maybeSingle(); // ✅ بدل .single() أو بدونها
 
       if (error) {
         console.error("Trip fetch error:", error.message);
+      } else if (!data) {
+        console.warn("No trip found for this ID:", tripScheduleId);
       } else {
         setTripInfo(data);
 
@@ -80,6 +81,24 @@ export default function TripInfo() {
 
     fetchTripInfoAndReviews();
   }, [tripScheduleId, user?.id]);
+
+  const fetchUpdatedReviews = async () => {
+    const { data } = await supabase
+      .from("reviews")
+      .select("id, user_id, rating, review_text, created_at")
+      .eq("base_trip_id", tripInfo.base_trips.id);
+
+    const sortedReviews = [...data];
+    if (user?.id) {
+      sortedReviews.sort((a, b) => {
+        if (a.user_id === user.id) return -1;
+        if (b.user_id === user.id) return 1;
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+    }
+
+    setReviews(sortedReviews);
+  };
 
   const handleSubmit = async () => {
     if (selectedRating === 0) {
@@ -138,24 +157,6 @@ export default function TripInfo() {
     }
   };
 
-  const fetchUpdatedReviews = async () => {
-    const { data } = await supabase
-      .from("reviews")
-      .select("id, user_id, rating, review_text, created_at")
-      .eq("base_trip_id", tripInfo.base_trips.id);
-
-    const sortedReviews = [...data];
-    if (user?.id) {
-      sortedReviews.sort((a, b) => {
-        if (a.user_id === user.id) return -1;
-        if (b.user_id === user.id) return 1;
-        return new Date(b.created_at) - new Date(a.created_at);
-      });
-    }
-
-    setReviews(sortedReviews);
-  };
-
   if (!tripInfo) return <div className="text-center p-4">Loading...</div>;
 
   return (
@@ -180,7 +181,7 @@ export default function TripInfo() {
 
         {/* التقييم العام */}
         <div className="bg-background rounded-md shadow p-6 mb-6 text-center">
-          <h3 className="text-xl font-semibold mb-2 text-text-primary ">
+          <h3 className="text-xl font-semibold mb-2 text-text-primary">
             How was {tripInfo.base_trips.title}?
           </h3>
           <div className="flex justify-center gap-8">

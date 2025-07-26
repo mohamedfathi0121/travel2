@@ -13,18 +13,23 @@ const VrPlayer = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // Get video element reference after it's loaded
-    const video = document.getElementById("vr-video");
-    videoRef.current = video;
+    const checkVideoReady = setInterval(() => {
+      const video = document.getElementById("vr-video");
+      if (video) {
+        videoRef.current = video;
 
-    // Update progress bar
-    video.addEventListener("timeupdate", () => {
-      const progress = (video.currentTime / video.duration) * 100;
-      setProgress(progress);
-    });
+        video.addEventListener("timeupdate", () => {
+          const progress = (video.currentTime / video.duration) * 100;
+          setProgress(progress);
+        });
 
-    // Set initial playing state based on video element's autoplay
-    setIsPlaying(video.autoplay);
+        setIsPlaying(video.autoplay);
+
+        clearInterval(checkVideoReady); // أوقف التحقق بمجرد العثور على الفيديو
+      }
+    }, 500);
+
+    return () => clearInterval(checkVideoReady);
   }, []);
 
   const handlePlayPause = () => {
@@ -38,7 +43,7 @@ const VrPlayer = () => {
     }
   };
 
-  const handleProgressChange = e => {
+  const handleProgressChange = (e) => {
     const newTime = (e.target.value / 100) * videoRef.current.duration;
     videoRef.current.currentTime = newTime;
   };
@@ -51,7 +56,7 @@ const VrPlayer = () => {
     <div className="fixed inset-0 bg-black text-white z-[9999]">
       <div className="absolute top-4 left-4 z-10">
         <button
-          onClick={() => navigate(-1)} // Navigate back to the previous route
+          onClick={() => navigate(-1)}
           className="bg-white/20 backdrop-blur-sm text-white p-3 rounded-full hover:bg-white/40 transition-colors"
         >
           <X className="w-6 h-6" />
@@ -62,7 +67,7 @@ const VrPlayer = () => {
         <a-scene embedded vr-mode-ui="enabled: true">
           <a-assets>
             <video
-              id="vr-video" // Keep the ID for reference
+              id="vr-video"
               src={videoUrl}
               autoPlay
               loop="true"
@@ -73,7 +78,7 @@ const VrPlayer = () => {
         </a-scene>
       </div>
 
-      {/* Video Controls */}
+      {/* عناصر التحكم */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 w-11/12 max-w-3xl">
         <div className="bg-black/50 backdrop-blur-sm p-4 rounded-lg">
           <input

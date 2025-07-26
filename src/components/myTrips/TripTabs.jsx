@@ -1,4 +1,4 @@
-const tabs = ["Approved", "Completed", "Cancelled", "Not Approved"];
+const tabs = ["On Going", "Completed"];
 
 export default function TripTabs({ currentTab, setCurrentTab }) {
   return (

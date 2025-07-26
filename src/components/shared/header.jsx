@@ -78,12 +78,12 @@ export default function Header() {
               </li>
               <li>
                 <NavLink
-                  to="/profile"
+                  to="/complaint"
                   className={({ isActive }) =>
                     isActive ? activeClassName : "hover:text-button-primary"
                   }
                 >
-                  Profile
+                  complaints
                 </NavLink>
               </li>
             </>
