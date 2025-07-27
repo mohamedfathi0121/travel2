@@ -30,9 +30,9 @@ export default function TripDetails() {
   const [locationUrl, setLocationUrl] = useState("");
   const [bookingInfo, setBookingInfo] = useState({});
   const [scheduleId, setScheduleId] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg] = useState("");
   const { user } = useAuth();
-
+  
   // ✅ Reload page after payment
   useEffect(() => {
     if (localStorage.getItem("payment_done")) {
@@ -117,7 +117,12 @@ export default function TripDetails() {
     fetchTripData();
   }, [tripId]);
 
-  const handleBooking = async () => {
+  const handleBooking = async () => { 
+    
+    if (!user || !user.id) {
+  toast.error("You must be logged in to book.");
+  return;
+    }
 
     if (!scheduleId || !tripId) {
       toast.error("Trip or schedule data not loaded.");
@@ -130,7 +135,7 @@ export default function TripDetails() {
       (bookingInfo.doubleRooms || 0) === 0 &&
       (bookingInfo.tripleRooms || 0) === 0
     ) {
-      setErrorMsg("Please select at least one room before booking.");
+      toast.error("Please select at least one room before booking.");
       return;
     }
 
@@ -141,12 +146,45 @@ export default function TripDetails() {
 
     const totalPeople = bookingInfo.members || 0;
 
-    if (totalRoomCapacity < totalPeople) {
-      setErrorMsg(
-        `You selected rooms for only ${totalRoomCapacity} members, but you have ${totalPeople} members. Please add more rooms.`
-      );
-      return;
-    }
+   // ✅ تحقق من عدد الأفراد مقابل سعة الغرف
+if (totalRoomCapacity < totalPeople) {
+  toast.error(
+    `You selected rooms for only ${totalRoomCapacity} members, but you have ${totalPeople} members. Please add more rooms.`
+  );
+  return;
+}
+
+
+// ✅ تحقق من وجود حجز سابق للمستخدم
+const { data: existingBooking, errorerror: bookingError } = await supabase
+  .from("bookings")
+  .select("id")
+  .eq("user_id", user.id)
+  .eq("trip_schedule_id", scheduleId)
+  .maybeSingle();
+if (bookingError) {
+  toast.error("Error checking existing booking.");
+  return;
+}
+if (existingBooking) {
+  toast.error("You have already booked this trip.");
+  return;
+}
+
+// ✅ تحقق من توفر التذاكر
+if (statsData.reminder_tickets <= 0) {
+  toast.error("This trip is fully booked. No tickets are available.");
+  return;
+}
+
+if (totalPeople > statsData.reminder_tickets) {
+  toast.error(
+    `Only ${statsData.reminder_tickets} ticket(s) left, but you have ${totalPeople} members. Please reduce the number of people.`
+  );
+  return;
+}
+
+
 
     const payload = {
       user_id: user.id,
@@ -154,6 +192,28 @@ export default function TripDetails() {
       base_trip_id: tripId,
       booking_info: bookingInfo,
     };
+    try {
+    const response = await fetch(
+      "https://iklzpmnhifxwgmqydths.supabase.co/functions/v1/create-booking",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      toast.error(result.error || "Booking failed.");
+      return;
+    }
+
+    toast.success("Booking successful!");
+  } catch (error) {
+    toast.error("Something went wrong. Try again.");
+    console.error(error);
+  }
 
     try {
       toast.loading("Redirecting to payment...", { id: "payment" });
@@ -197,7 +257,11 @@ export default function TripDetails() {
   return (
     <div className="min-h-screen bg-background text-black p-4 space-y-6">
       <StatsSection statsData={statsData} />
-      <TripName {...tripData} />
+       <TripName 
+  name={tripData.title}
+  city={tripData.city}
+  country={tripData.country}
+/>
       <TripVRVideo videoUrl={tripData.video_url} />
       <VrCard image={tripData.photo_urls?.[0]} videoUrl={tripData.video_url} />
       <TripGallery images={tripData.photo_urls} />
