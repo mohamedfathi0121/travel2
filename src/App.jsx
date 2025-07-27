@@ -17,6 +17,8 @@ import SendComplaint from "./pages/SendComplaint";
 import NotFound from "./pages/NotFound";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import ProtectedRoute from "./routes/ProtectedRoutes";
+import { User } from "lucide-react";
+import Ticket from "./pages/Ticket";
 function App() {
   return (
     <>
@@ -37,6 +39,7 @@ function App() {
                 <Route path="/complaint" element={<SendComplaint />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/review/:tripId" element={<TripInfo />} />
+                <Route path="/ticket/:ticketId" element={<Ticket/>} />
               </Route>
             </Route>
             <Route path="*" element={<NotFound />} />

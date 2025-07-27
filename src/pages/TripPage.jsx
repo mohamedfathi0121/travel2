@@ -33,6 +33,7 @@ export default function TripPage() {
         .select(
           `
           id,
+          ticket_id,
           trip_schedules (
             id,
             start_date,
@@ -75,6 +76,7 @@ export default function TripPage() {
           title: baseTrip?.title || "Untitled",
           date: `${startFormatted.date} at ${startFormatted.time}\n→ ${endFormatted.date} at ${endFormatted.time}`,
           image: baseTrip?.photo_urls?.[0] || "/default-trip-image.jpg",
+          ticket_id: booking.ticket_id
         };
       });
 
@@ -85,6 +87,7 @@ export default function TripPage() {
   }, [user?.id]);
 
   const filteredTrips = trips.filter((trip) => trip.status === currentTab);
+  console.log(filteredTrips);
 
   return (
     <div className="w-full max-w-[90%] mx-auto p-6 font-sans bg-background min-h-screen">
@@ -100,6 +103,8 @@ export default function TripPage() {
               image={trip.image}
               showReviewButton={currentTab === "Completed"}
               id={trip.id}
+              ticketId={trip.ticket_id}
+
               
             />
           ))

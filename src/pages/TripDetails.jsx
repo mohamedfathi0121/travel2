@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import supabase from "../utils/supabase";
 import toast from "react-hot-toast";
-
 import StatsSection from "../components/TripDeatailsComponents/StatsSection";
 import TripName from "../components/TripDeatailsComponents/TripName";
 import TripVRVideo from "../components/TripDeatailsComponents/VrPlayer";
@@ -32,7 +31,7 @@ export default function TripDetails() {
   const [scheduleId, setScheduleId] = useState(null);
   const [errorMsg] = useState("");
   const { user } = useAuth();
-  
+
   // ✅ Reload page after payment
   useEffect(() => {
     if (localStorage.getItem("payment_done")) {
@@ -54,7 +53,7 @@ export default function TripDetails() {
         const { data: scheduleData, error: scheduleError } = await supabase
           .from("trip_schedules")
           .select(
-            "id, base_trip_id, price_include, price_not_include, start_date, end_date, price, location_url, available_tickets, sold_tickits, status"
+            "id, base_trip_id, price_include, price_not_include, start_date, end_date, price, location_url, total_tickets, available_tickets, sold_tickets, status"
           )
           .eq("id", tripId)
           .single();
@@ -78,11 +77,11 @@ export default function TripDetails() {
           double: parsedPrices.price_double,
           triple: parsedPrices.price_triple,
         });
-
+        console.log("price", scheduleData);
         // ✅ Stats Data
-        const totalTickets = Number(scheduleData.available_tickets) || 0;
-        const sold = Number(scheduleData.sold_tickits) || 0;
-        const reminderTickets = totalTickets - sold;
+        const totalTickets = Number(scheduleData.total_tickets) || 0;
+        const sold = Number(scheduleData.sold_tickets) || 0;
+        const reminderTickets = Number(scheduleData.available_tickets) || 0;
 
         setStatsData({
           available_tickets: totalTickets,
@@ -117,11 +116,10 @@ export default function TripDetails() {
     fetchTripData();
   }, [tripId]);
 
-  const handleBooking = async () => { 
-    
+  const handleBooking = async () => {
     if (!user || !user.id) {
-  toast.error("You must be logged in to book.");
-  return;
+      toast.error("You must be logged in to book.");
+      return;
     }
 
     if (!scheduleId || !tripId) {
@@ -146,45 +144,42 @@ export default function TripDetails() {
 
     const totalPeople = bookingInfo.members || 0;
 
-   // ✅ تحقق من عدد الأفراد مقابل سعة الغرف
-if (totalRoomCapacity < totalPeople) {
-  toast.error(
-    `You selected rooms for only ${totalRoomCapacity} members, but you have ${totalPeople} members. Please add more rooms.`
-  );
-  return;
-}
+    // ✅ تحقق من عدد الأفراد مقابل سعة الغرف
+    if (totalRoomCapacity < totalPeople) {
+      toast.error(
+        `You selected rooms for only ${totalRoomCapacity} members, but you have ${totalPeople} members. Please add more rooms.`
+      );
+      return;
+    }
 
+    // ✅ تحقق من وجود حجز سابق للمستخدم
+    const { data: existingBooking, errorerror: bookingError } = await supabase
+      .from("bookings")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("trip_schedule_id", scheduleId)
+      .maybeSingle();
+    if (bookingError) {
+      toast.error("Error checking existing booking.");
+      return;
+    }
+    if (existingBooking) {
+      toast.error("You have already booked this trip.");
+      return;
+    }
 
-// ✅ تحقق من وجود حجز سابق للمستخدم
-const { data: existingBooking, errorerror: bookingError } = await supabase
-  .from("bookings")
-  .select("id")
-  .eq("user_id", user.id)
-  .eq("trip_schedule_id", scheduleId)
-  .maybeSingle();
-if (bookingError) {
-  toast.error("Error checking existing booking.");
-  return;
-}
-if (existingBooking) {
-  toast.error("You have already booked this trip.");
-  return;
-}
+    // ✅ تحقق من توفر التذاكر
+    if (statsData.reminder_tickets <= 0) {
+      toast.error("This trip is fully booked. No tickets are available.");
+      return;
+    }
 
-// ✅ تحقق من توفر التذاكر
-if (statsData.reminder_tickets <= 0) {
-  toast.error("This trip is fully booked. No tickets are available.");
-  return;
-}
-
-if (totalPeople > statsData.reminder_tickets) {
-  toast.error(
-    `Only ${statsData.reminder_tickets} ticket(s) left, but you have ${totalPeople} members. Please reduce the number of people.`
-  );
-  return;
-}
-
-
+    if (totalPeople > statsData.reminder_tickets) {
+      toast.error(
+        `Only ${statsData.reminder_tickets} ticket(s) left, but you have ${totalPeople} members. Please reduce the number of people.`
+      );
+      return;
+    }
 
     const payload = {
       user_id: user.id,
@@ -192,28 +187,28 @@ if (totalPeople > statsData.reminder_tickets) {
       base_trip_id: tripId,
       booking_info: bookingInfo,
     };
-    try {
-    const response = await fetch(
-      "https://iklzpmnhifxwgmqydths.supabase.co/functions/v1/create-booking",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
+    //   try {
+    //   const response = await fetch(
+    //     "https://iklzpmnhifxwgmqydths.supabase.co/functions/v1/create-booking",
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(payload),
+    //     }
+    //   );
 
-    const result = await response.json();
+    //   const result = await response.json();
 
-    if (!response.ok) {
-      toast.error(result.error || "Booking failed.");
-      return;
-    }
+    //   if (!response.ok) {
+    //     toast.error(result.error || "Booking failed.");
+    //     return;
+    //   }
 
-    toast.success("Booking successful!");
-  } catch (error) {
-    toast.error("Something went wrong. Try again.");
-    console.error(error);
-  }
+    //   toast.success("Booking successful!");
+    // } catch (error) {
+    //   toast.error("Something went wrong. Try again.");
+    //   console.error(error);
+    // }
 
     try {
       toast.loading("Redirecting to payment...", { id: "payment" });
@@ -245,8 +240,7 @@ if (totalPeople > statsData.reminder_tickets) {
     }
   };
 
-  if (loading)
-    return <TripDetailsSkeleton/>;
+  if (loading) return <TripDetailsSkeleton />;
   if (!tripData)
     return (
       <div className="p-6 text-center text-gray-500 text-lg">
@@ -257,11 +251,11 @@ if (totalPeople > statsData.reminder_tickets) {
   return (
     <div className="min-h-screen bg-background text-black p-4 space-y-6">
       <StatsSection statsData={statsData} />
-       <TripName 
-  name={tripData.title}
-  city={tripData.city}
-  country={tripData.country}
-/>
+      <TripName
+        name={tripData.title}
+        city={tripData.city}
+        country={tripData.country}
+      />
       <TripVRVideo videoUrl={tripData.video_url} />
       <VrCard image={tripData.photo_urls?.[0]} videoUrl={tripData.video_url} />
       <TripGallery images={tripData.photo_urls} />
@@ -270,7 +264,8 @@ if (totalPeople > statsData.reminder_tickets) {
       <NotIncludedItems notIncludedText={notIncludedText} />
       <RoomPrices roomPrices={roomPrices} />
       <HotelNotes />
-      <ReviewSection {...tripData} />
+      <ReviewSection tripId={tripData.id} />
+      <HotelLocation locationUrl={locationUrl} />
       <InquiryFormSection
         priceData={statsData?.price || {}}
         setBookingInfo={setBookingInfo}
@@ -281,8 +276,6 @@ if (totalPeople > statsData.reminder_tickets) {
           {errorMsg}
         </div>
       )}
-
-      <HotelLocation locationUrl={locationUrl} />
 
       <button
         className="fixed bottom-4 left-1/2 transform -translate-x-1/2 px-5 py-2 rounded-full shadow-lg text-base z-50 bg-blue-500 text-white hover:bg-blue-600 transition-all"

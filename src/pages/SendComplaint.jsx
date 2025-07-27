@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import supabase from "../utils/supabase";
 import toast from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
 
 // ✅ Validation Schema
 const complaintSchema = z.object({
@@ -25,7 +26,7 @@ const complaintSchema = z.object({
 });
 
 const SendComplaint = () => {
-  const user = { id: "a6092e3b-e4c0-46d3-a696-029fc032daa4" };
+  const { user } = useAuth();
   const [companies, setCompanies] = useState([]);
 
   const {
@@ -62,7 +63,7 @@ const SendComplaint = () => {
       }
 
       const today = new Date();
-      const completed = bookings.filter((b) => {
+      const completed = bookings.filter(b => {
         const date = new Date(b.trip_schedules?.end_date);
         return date < today;
       });
@@ -85,7 +86,7 @@ const SendComplaint = () => {
   }, [user.id]);
 
   // ✅ Submit Function (Uses Supabase Invoke)
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     console.log(
       data.selectedEmail,
       data.complaintType,
@@ -135,7 +136,7 @@ const SendComplaint = () => {
               className="w-full px-4 py-2 border border-text-primary bg-background text-text-primary rounded-md shadow-sm focus:outline-none"
             >
               <option value="">-- Choose a company --</option>
-              {companies.map((c) => (
+              {companies.map(c => (
                 <option key={c.id} value={c.contact_email}>
                   {c.c_name}
                 </option>

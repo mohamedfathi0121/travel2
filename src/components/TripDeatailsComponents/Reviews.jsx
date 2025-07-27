@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import supabase from "../../utils/supabase";
 
@@ -44,8 +43,7 @@ function ReviewBar({ stars, percent }) {
 }
 
 // ✨ مكون الريفيو الأساسي
-export default function ReviewSection() {
-  const { tripId } = useParams();
+export default function ReviewSection({tripId}) {
   const [tripData, setTripData] = useState(null);
 
   useEffect(() => {
