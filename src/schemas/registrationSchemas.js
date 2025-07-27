@@ -17,7 +17,10 @@ export const loginSchema = z.object({
 
 export const step1Schema = z
   .object({
-    fullName: z.string().min(1, "Full name is required").min(4, "Full name must be at least 4 characters long"),
+    fullName: z
+      .string()
+      .min(1, "Full name is required")
+      .min(4, "Full name must be at least 4 characters long"),
     email: z.string().email("Invalid email address"),
     password: z
       .string()
@@ -39,7 +42,8 @@ export const step1Schema = z
 export const step2Schema = z.object({
   age: z
     .number({ invalid_type_error: "Age is required" })
-    .min(18, "You must be at least 18 years old").max(120, "Age must be a realistic value"),
+    .min(18, "You must be at least 18 years old")
+    .max(120, "Age must be a realistic value"),
   gender: z.string().min(1, "Gender is required"),
   dob: z
     .string()
@@ -47,18 +51,19 @@ export const step2Schema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format"),
   country: z.string().min(1, "Country is required"),
   city: z.string().min(1, "City is required"),
+  countryCode: z.string().min(1, "Please select a country code."),
+  phoneNumber: z.string().regex(/^[0-9]{6,15}$/, "Enter a valid phone number"),
 });
-
 
 export const step3Schema = z.object({
   profilePhoto: z
     .any()
     .refine(
-      (files) => files instanceof FileList && files.length > 0,
+      files => files instanceof FileList && files.length > 0,
       "Profile photo is required"
     )
     .refine(
-      (files) =>
+      files =>
         files instanceof FileList &&
         ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
           files[0]?.type
@@ -66,4 +71,3 @@ export const step3Schema = z.object({
       "Only JPG, PNG, or WEBP images are allowed"
     ),
 });
-

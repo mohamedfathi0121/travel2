@@ -18,9 +18,9 @@ export default function RegisterPage() {
     const renderStep = () => {
         switch (step) {
             case 1:
-                return <Step1 nextStep={nextStep} updateFormData={updateFormData} />;
+                return <Step1 nextStep={nextStep} updateFormData={updateFormData}  formData={formData}/>;
             case 2:
-                return <Step2 nextStep={nextStep} prevStep={prevStep} updateFormData={updateFormData} />;
+                return <Step2 nextStep={nextStep} prevStep={prevStep} updateFormData={updateFormData} formData={formData} />;
             case 3:
                 return <Step3 prevStep={prevStep} formData={formData} />;
             default:

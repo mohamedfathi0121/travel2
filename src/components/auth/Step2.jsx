@@ -5,10 +5,13 @@ import { step2Schema } from "../../schemas/registrationSchemas";
 import Input from "./Input";
 import Select from "./Select";
 
-// ✅ Import all countries and cities
+// ✅ Import countries and cities
 import countriesAndCities from "all-countries-and-cities-json";
 
-const Step2 = ({ nextStep, prevStep, updateFormData }) => {
+// ✅ Import phone codes
+import phoneCodes from "../../data/phone.json";
+
+const Step2 = ({ nextStep, prevStep, updateFormData, formData }) => {
   const {
     register,
     handleSubmit,
@@ -17,22 +20,38 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(step2Schema),
-    defaultValues: { age: "", dob: "", country: "", city: "" },
+    defaultValues: {
+      gender: formData.gender || "",
+      dob: formData.dob || "",
+      age: formData.age || "",
+      country: formData.country || "",
+      city: formData.city || "",
+      countryCode: formData.countryCode || "",
+      phoneNumber: formData.phoneNumber || "",
+    },
   });
 
   const [cities, setCities] = useState([]);
 
   const selectedCountry = watch("country");
-  const dob = watch("dob"); // Watch date of birth changes
+  const dob = watch("dob");
 
-  // ✅ Update cities when the user selects a country
+  // ✅ Convert phone codes JSON to dropdown-friendly array
+  const countryCodes = Object.entries(phoneCodes).map(([iso, code]) => ({
+    iso,
+    code: `+${code}`,
+    label: `${iso} (+${code})`,
+  }));
+
+  // ✅ Populate cities on mount if formData already has a country
   useEffect(() => {
-    if (selectedCountry) {
-      setCities(countriesAndCities[selectedCountry] || []);
+    const country = selectedCountry || formData?.country;
+    if (country) {
+      setCities(countriesAndCities[country] || []);
     } else {
       setCities([]);
     }
-  }, [selectedCountry]);
+  }, [selectedCountry, formData]);
 
   // ✅ Automatically calculate age when DOB changes
   useEffect(() => {
@@ -44,14 +63,26 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      setValue("age", age); // Update age in the form
+      setValue("age", age);
     } else {
       setValue("age", "");
     }
   }, [dob, setValue]);
 
-  const onSubmit = data => {
-    updateFormData(data);
+  const onSubmit = (data) => {
+    // ✅ Combine country code + phone number into a single phone field
+    const fullPhone = `${data.countryCode}${data.phoneNumber}`;
+
+    const finalData = {
+      ...data,
+      phone: fullPhone,
+    };
+
+    // ✅ Optionally remove separate fields
+    delete finalData.countryCode;
+    delete finalData.phoneNumber;
+
+    updateFormData(finalData);
     nextStep();
   };
 
@@ -62,8 +93,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
       </h1>
 
       <div className="space-y-4">
-        {/* ✅ Read-Only Age (Auto Calculated) */}
-
+        {/* ✅ Gender */}
         <Select
           name="gender"
           label="Gender"
@@ -76,13 +106,20 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           <option value="prefer_not_to_say">Prefer not to say</option>
         </Select>
 
-        {/* ✅ Date of Birth (Triggers Age Calculation) */}
+        {/* ✅ Date of Birth & Age */}
         <Input
           name="dob"
           label="Date of Birth"
           type="date"
           register={register}
           error={errors.dob}
+          onInput={(e) => {
+            const parts = e.target.value.split("-");
+            if (parts[0] && parts[0].length > 4) {
+              parts[0] = parts[0].slice(0, 4); // Ensure year is max 4 digits
+              e.target.value = parts.join("-");
+            }
+          }}
         />
         <Input
           name="age"
@@ -94,6 +131,8 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           autoComplete="off"
           readOnly
         />
+
+        {/* ✅ Country & City */}
         <Select
           name="country"
           label="Country"
@@ -101,7 +140,7 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           error={errors.country}
         >
           <option value="">Select your country</option>
-          {Object.keys(countriesAndCities).map(country => (
+          {Object.keys(countriesAndCities).map((country) => (
             <option key={country} value={country}>
               {country}
             </option>
@@ -116,12 +155,48 @@ const Step2 = ({ nextStep, prevStep, updateFormData }) => {
           disabled={!selectedCountry}
         >
           <option value="">Select</option>
-          {cities.map(city => (
-            <option key={city} value={city}>
+          {cities.map((city, i) => (
+            <option key={`${city}-${i}`} value={city}>
               {city}
             </option>
           ))}
         </Select>
+
+        {/* ✅ Phone Number with Country Code */}
+        <div>
+          <label className="block text-sm mb-1 text-text-primary">
+            Phone Number
+          </label>
+          <div className="flex">
+            <select
+              {...register("countryCode")}
+              className="w-1/3 bg-input p-3 rounded-l-md text-text-hard-secondary"
+            >
+              <option value="">Code</option>
+              {countryCodes.map((c) => (
+                <option key={c.iso} value={c.code}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              placeholder="5551234567"
+              {...register("phoneNumber")}
+              className="w-2/3 bg-input p-3 rounded-r-md text-text-primary"
+            />
+          </div>
+          {errors.countryCode && (
+            <p className="text-red-500 text-xs">
+              {errors.countryCode.message}
+            </p>
+          )}
+          {errors.phoneNumber && !errors.countryCode && (
+            <p className="text-red-500 text-xs">
+              {errors.phoneNumber.message}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="flex justify-between space-x-4">

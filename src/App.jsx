@@ -16,6 +16,7 @@ import TripPage from "./pages/TripPage";
 import SendComplaint from "./pages/SendComplaint";
 import NotFound from "./pages/NotFound";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import ProtectedRoute from "./routes/ProtectedRoutes";
 function App() {
   return (
     <>
@@ -27,13 +28,16 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/vrplayer" element={<VrPlayer />} />
-              <Route path="/payment" element={<PaymentPage />} />
+
               <Route path="/trips" element={<AllTrips />} />
               <Route path="/trips/:tripId/" element={<TripDetails />} />
-              <Route path="/mytrips" element={<TripPage />} />
-              <Route path="/complaint" element={<SendComplaint />} />
-              <Route path="/payment-success" element={<PaymentSuccess/>}/>
-              <Route path="/review/:tripId" element={<TripInfo />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/mytrips" element={<TripPage />} />
+                <Route path="/complaint" element={<SendComplaint />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/review/:tripId" element={<TripInfo />} />
+              </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

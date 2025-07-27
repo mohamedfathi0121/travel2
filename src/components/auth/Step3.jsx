@@ -35,7 +35,7 @@ const Step3 = ({ prevStep, formData }) => {
 
   // Handle drag and drop file selection
   const handleDrop = useCallback(
-    (e) => {
+    e => {
       e.preventDefault();
       e.stopPropagation();
       const file = e.dataTransfer.files[0];
@@ -46,7 +46,7 @@ const Step3 = ({ prevStep, formData }) => {
     [setValue]
   );
 
-  const onSubmit = async (step3Data) => {
+  const onSubmit = async step3Data => {
     setIsSubmitting(true);
     setError(null);
 
@@ -62,10 +62,13 @@ const Step3 = ({ prevStep, formData }) => {
       apiFormData.append("dateOfBirth", finalData.dob);
       apiFormData.append("country", finalData.country);
       apiFormData.append("city", finalData.city);
-      apiFormData.append("phoneNumber", finalData.phoneNumber || "");
+      apiFormData.append(
+        "phoneNumbers",
+        JSON.stringify([`${finalData.countryCode} ${finalData.phoneNumber}`])
+      );
       apiFormData.append("avatarFile", finalData.profilePhoto[0]);
-
-      const {  error } = await supabase.functions.invoke("user-register", {
+      console.log(apiFormData)
+      const { error } = await supabase.functions.invoke("user-register", {
         body: apiFormData,
       });
 
@@ -94,7 +97,7 @@ const Step3 = ({ prevStep, formData }) => {
         className="w-full p-8 border-2 border-dashed rounded-lg text-center cursor-pointer
                    bg-input text-text-secondary hover:border-button-primary transition-colors"
         onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
+        onDragOver={e => e.preventDefault()}
       >
         {preview ? (
           <div className="flex flex-col items-center">
@@ -144,7 +147,9 @@ const Step3 = ({ prevStep, formData }) => {
           className="bg-button-primary text-white font-bold py-3 px-8 rounded-lg 
                      hover:bg-button-primary-hover transition-colors disabled:bg-gray-400"
         >
-          {isSubmitting ? "Completing Registration..." : "Complete Registration"}
+          {isSubmitting
+            ? "Completing Registration..."
+            : "Complete Registration"}
         </button>
       </div>
       <button

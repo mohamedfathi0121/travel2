@@ -6,7 +6,7 @@ import Input from "./Input";
 import { Link } from "react-router-dom";
 import supabase from "../../utils/supabase"; // ✅ Ensure correct path
 
-const Step1 = ({ nextStep, updateFormData }) => {
+const Step1 = ({ nextStep, updateFormData, formData }) => {
   const {
     register,
     handleSubmit,
@@ -15,11 +15,17 @@ const Step1 = ({ nextStep, updateFormData }) => {
     clearErrors,
   } = useForm({
     resolver: zodResolver(step1Schema),
+    defaultValues: {
+      fullName: formData?.fullName || "",
+      email: formData?.email || "",
+      password: formData?.password || "",
+      confirmPassword: formData?.confirmPassword || "",
+    },
   });
 
   const [checkingEmail, setCheckingEmail] = useState(false);
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     setCheckingEmail(true);
 
     // ✅ Call Edge Function to check if email exists
